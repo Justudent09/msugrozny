@@ -1,79 +1,38 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule App</title>
     <link rel="stylesheet" href="style.css">
-    <title>BotTT</title>
 </head>
 <body>
-    <div class="contact" id="contact">
-        <form id="userForm">
-
-            <div class="input-container">
-                <select id="course" name="course" required>
-                    <option value="1">Курс 1</option>
-                    <option value="2">Курс 2</option>
-                </select>
+    <div class="schedule-container">
+        <div class="calendar">
+            <div class="month">
+                <span class="prev">❮</span>
+                <span class="month-name">April, 2020</span>
+                <span class="next">❯</span>
             </div>
-
-            <div class="input-container">
-                <select id="direction" name="direction" required>
-                    <option value="management">Менеджмент</option>
-                    <option value="pmi">ПМИ</option>
-                    <option value="jurisprudence">Юриспруденция</option>
-                </select>
-            </div>
-
-            <div class="input-container">
-                <input type="password" id="password" name="password" required>
-            </div>
-
-            <button type="submit">ОТПРАВИТЬ</button>
-        </form>
-    </div>
-
-    <div class="container1 hidden" id="mainContent">
-        <div class="timetable">
-            <div class="profile">
-                <div class="status">
-                    <div class="icon-profile" id="openModalBtn"></div>
-                    <div class="months" id="currentDateDiv"></div>
-                    <div class="notifications">
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 48 48" style="fill:#FFFFFF;">
-                            <path d="M38.498 36H9.502c-1.205 0-2.31-.607-2.955-1.625S5.822 32.1 6.335 31.01L9 25.648v-6.267c0-8.239 6.271-14.987 14.277-15.364l0 0c4.151-.188 8.08 1.271 11.075 4.128C37.35 11.004 39 14.859 39 19v6.648l2.65 5.333c.527 1.119.448 2.377-.197 3.395S39.703 36 38.498 36zM23.348 5.516h.01H23.348zM18.09 38c.478 2.833 2.942 5 5.91 5s5.431-2.167 5.91-5H18.09z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="appeal">
-                    <div class="usercard" id="usercard" style="color: white"></div>
-                    <h1 id="appealText" style="color: #5D5C61"></h1>
-                </div>
-            </div>
-            <div class="horizontal-scroll" id="daysContainer"></div>
-            <div class="couples">
-                <div class="contour" id="contour"></div>
+            <div class="weekdays">
+                <span>Fri 17</span>
+                <span>Sat 18</span>
+                <span>Sun 19</span>
+                <span class="active">Mon 20</span>
+                <span>Tue 21</span>
+                <span>Wed 22</span>
+                <span>Thu 23</span>
             </div>
         </div>
-    </div>
-    
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <h1>ВЫ ТОЧНО ХОТИТЕ ВЫЙТИ?</h1>
-            <button id="deleteButton" class="hidden">ВЫЙТИ</button>
+        
+        <div class="tasks">
+            <h2>Today's Tasks</h2>
+            <ul id="task-list"></ul>
         </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="notifications-panel" id="notificationsPanel">
-        <div class="notifications-content">
-            <div class="notifications-header">
-                <h2>Notifications</h2>
-            </div>
-        </div>
-    </div>
-  
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="app.js"></script>
+    <input type="file" id="excel-file" accept=".xlsx" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

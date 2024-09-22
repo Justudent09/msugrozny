@@ -4,25 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule App</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .schedule-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 20px;
+        }
+
+        .calendar {
+            background-color: #4e54c8;
+            padding: 20px;
+            border-radius: 15px;
+            color: #fff;
+        }
+
+        .month {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .weekdays {
+            display: flex;
+            overflow-x: auto;
+            margin-top: 15px;
+            padding: 10px 0;
+        }
+
+        .weekdays span {
+            background-color: #5a60ea;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            width: 40px;
+            cursor: pointer;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .weekdays .active {
+            background-color: #fff;
+            color: #4e54c8;
+        }
+
+        .tasks {
+            margin-top: 20px;
+        }
+
+        .tasks h2 {
+            font-size: 24px;
+            color: #4e54c8;
+            margin-bottom: 10px;
+        }
+
+        .tasks ul {
+            list-style: none;
+        }
+
+        .tasks ul li {
+            background-color: #e7e7fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="schedule-container">
         <div class="calendar">
             <div class="month">
-                <span class="prev">❮</span>
-                <span class="month-name">April, 2020</span>
-                <span class="next">❯</span>
+                <span class="prev" onclick="changeMonth(-1)">❮</span>
+                <span class="month-name" id="month-name"></span>
+                <span class="next" onclick="changeMonth(1)">❯</span>
             </div>
-            <div class="weekdays">
-                <span>Fri 17</span>
-                <span>Sat 18</span>
-                <span>Sun 19</span>
-                <span class="active">Mon 20</span>
-                <span>Tue 21</span>
-                <span>Wed 22</span>
-                <span>Thu 23</span>
-            </div>
+            <div class="weekdays" id="weekdays"></div>
         </div>
         
         <div class="tasks">
@@ -31,8 +106,105 @@
         </div>
     </div>
 
-    <input type="file" id="excel-file" accept=".xlsx" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="app.js"></script>
+    <script>
+        let scheduleData = {};
+        let currentDate = new Date();
+
+        // Замените 'yourfile.xlsx' на имя вашего файла в репозитории
+        const excelFilePath = 'Расписание_осень_24_22.09.24_сентябрь.xlsx'; 
+
+        fetch(excelFilePath)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.arrayBuffer();
+            })
+            .then(data => {
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                scheduleData = {};
+                jsonData.forEach(row => {
+                    const dateCell = row[0]; // Дата в первом столбце
+                    const time = row[11]; // Время в столбце L (индекс 11)
+                    const subject = row[14]; // Название пары в столбце O (индекс 14)
+                    const room = row[15]; // Кабинет в столбце P (индекс 15)
+
+                    if (dateCell) {
+                        const formattedDate = new Date(dateCell).toLocaleDateString();
+                        if (!scheduleData[formattedDate]) {
+                            scheduleData[formattedDate] = [];
+                        }
+                        scheduleData[formattedDate].push({ time, subject, room });
+                    }
+                });
+
+                updateMonthName();
+                updateWeekdays();
+            })
+            .catch(error => console.error('Ошибка при загрузке файла:', error));
+
+        function updateMonthName() {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const monthNameElement = document.getElementById('month-name');
+            monthNameElement.textContent = `${monthNames[currentDate.getMonth()]}, ${currentDate.getFullYear()}`;
+        }
+
+        function updateWeekdays() {
+            const weekdaysContainer = document.getElementById('weekdays');
+            weekdaysContainer.innerHTML = ''; // Очистить предыдущие дни
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const span = document.createElement('span');
+                span.textContent = `${i}`;
+                span.onclick = () => selectDay(i);
+                weekdaysContainer.appendChild(span);
+            }
+            selectDay(currentDate.getDate()); // Выбрать текущий день
+            scrollToCurrentDay();
+        }
+
+        function updateTasks(day) {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = ''; // Очистить предыдущие задачи
+            const formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toLocaleDateString();
+            const tasks = scheduleData[formattedDate] || [];
+
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${task.time}</span> <span>${task.subject}</span> <span>${task.room}</span>`;
+                taskList.appendChild(li);
+            });
+        }
+
+        function scrollToCurrentDay() {
+            const currentDayElement = document.querySelector(`.weekdays span:nth-child(${currentDate.getDate()})`);
+            if (currentDayElement) {
+                const containerWidth = document.getElementById('weekdays').clientWidth;
+                const dayOffset = currentDayElement.offsetLeft - (containerWidth / 2) + (currentDayElement.offsetWidth / 2);
+                document.getElementById('weekdays').scrollLeft = dayOffset;
+            }
+        }
+
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            updateMonthName();
+            updateWeekdays();
+        }
+
+        function selectDay(day) {
+            currentDate.setDate(day);
+            document.querySelectorAll('.weekdays span').forEach(span => {
+                span.classList.remove('active');
+            });
+            document.querySelector(`.weekdays span:nth-child(${day})`).classList.add('active');
+            updateTasks(day);
+        }
+
+        // Инициализация
+        updateMonthName();
+        updateWeekdays();
+    </script>
 </body>
 </html>

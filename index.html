@@ -72,6 +72,18 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const contactDiv = document.getElementById('contact');
+
+window.addEventListener('resize', () => {
+    if (window.innerHeight < 500) {
+        contactDiv.style.transform = 'translateY(-10%)';  // Сдвигаем форму вверх при появлении клавиатуры
+    } else {
+        contactDiv.style.transform = 'translateY(0)';  // Возвращаем форму в исходное положение
+    }
+});
+    </script>
   
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="app.js"></script>

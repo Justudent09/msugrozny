@@ -1,3 +1,4 @@
+
 html, body {
    -webkit-tap-highlight-color: transparent;
    margin: 0;
@@ -238,24 +239,17 @@ body.no-scroll {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    transition: transform 0.3s ease-in-out; /* Плавный переход */
-    will-change: transform;
 }
 
 form {
     padding: 25px;
     width: 70%;
-    max-width: 400px;
+    max-width: 400px; /* Максимальная ширина контейнера */
+    box-sizing: border-box;
     background-color: #28272C;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease-in-out; /* Плавный переход */
-}
-
-.input-container input:focus {
-    transform: translateY(-15%); /* Поднимаем форму при фокусе на вводе пароля */
-    transition: transform 0.3s ease-in-out; /* Плавный переход */
+    text-align: center; /* Центрирование текста и содержимого */
 }
         
 .input-container {

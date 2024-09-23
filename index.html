@@ -5,108 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule App</title>
     <style>
-* {
-    -webkit-tap-highlight-color: transparent;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    user-select: none;
-}
+        * {
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            user-select: none;
+        }
 
-body {
-    background-color: #4e54c8;
-}
+        body {
+            background-color: #4e54c8;
+        }
 
-.schedule-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 70px 0 10px;
-    background-color: #4e54c8;
-}
+        .schedule-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 70px 0 10px;
+            background-color: #4e54c8;
+        }
 
-.calendar {
-    background-color: #4e54c8;
-    padding: 20px 0;
-    color: #fff;
-}
+        .calendar {
+            background-color: #4e54c8;
+            padding: 20px 0;
+            color: #fff;
+        }
 
-.month {
-    display: flex;
-    justify-content: flex-start; /* Выравнивание по левому краю */
-    padding-left: 20px; /* Отступ слева в 10px */
-    font-size: 24px;
-    font-weight: bold;
-}
+        .month {
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-.weekdays {
-    display: flex;
-    overflow-x: auto;
-    margin-top: 15px;
-    padding: 10px 0;
-    scroll-behavior: smooth; /* Плавная прокрутка */
-}
+        .weekdays {
+            display: flex;
+            overflow-x: auto;
+            margin-top: 15px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
 
-.weekdays div {
-    text-align: center;
-    flex-shrink: 0;
-    width: 50px;
-    margin-right: 10px;
-}
+        .weekdays div {
+            text-align: center;
+            flex-shrink: 0;
+            width: 50px;
+            margin-right: 10px;
+        }
 
-.weekdays div:first-child {
-    margin-left: 10px;
-}
+        .weekdays div:first-child {
+            margin-left: 10px;
+        }
 
-.day-block {
-    background-color: #5a60ea;
-    border-radius: 20px;
-    padding: 5px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 60px;
-    cursor: pointer;
-}
+        .day-block {
+            background-color: #5a60ea;
+            border-radius: 20px;
+            padding: 5px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 60px;
+            cursor: pointer;
+        }
 
-.weekdays .active {
-    background-color: #fff;
-    color: #4e54c8;
-}
+        .weekdays .active {
+            background-color: #fff;
+            color: #4e54c8;
+        }
 
-.tasks {
-    margin-top: 10px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 40px 40px 0 0;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: calc(100% - 230px);
-    overflow-y: auto;
-}
+        .tasks {
+            margin-top: 10px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 40px 40px 0 0;
+            position: relative;
+            overflow-y: auto;
+            max-height: 300px;
+        }
 
-.tasks-title {
-    font-size: 24px;
-    color: #4e54c8;
-}
+        .tasks-title {
+            font-size: 24px;
+            color: #4e54c8;
+        }
 
-.tasks ul {
-    list-style: none;
-}
+        .tasks ul {
+            list-style: none;
+            padding: 0;
+        }
 
-.tasks ul li {
-    background-color: #e7e7fd;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-}
+        .tasks ul li {
+            position: relative;
+            background-color: #e7e7fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .task-line {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: 5px;
+            background-color: #4e54c8;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #4e54c8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .circle.checked {
+            background-color: #4e54c8;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -120,9 +146,9 @@ body {
     </div>
     
     <div class="tasks">
-    <h2 class="tasks-title">Today's Tasks</h2>
-    <ul id="task-list"></ul>
-</div>
+        <h2 class="tasks-title">Today's Tasks</h2>
+        <ul id="task-list"></ul>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
@@ -201,34 +227,64 @@ body {
 
             tasks.forEach(task => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span>${task.time}</span> <span>${task.subject}</span> <span>${task.room}</span>`;
+                const circle = document.createElement('div');
+                circle.className = 'circle';
+                li.appendChild(circle);
+
+                const taskTime = document.createElement('span');
+                taskTime.textContent = task.time;
+
+                const taskSubject = document.createElement('span');
+                taskSubject.textContent = task.subject;
+
+                const taskRoom = document.createElement('span');
+                taskRoom.textContent = task.room;
+
+                li.appendChild(taskTime);
+                li.appendChild(taskSubject);
+                li.appendChild(taskRoom);
                 taskList.appendChild(li);
+
+                // Check if the current time is past the task time
+                checkTaskTime(task.time, circle);
             });
         }
 
-        function scrollToCurrentDay() {
-    const weekdaysContainer = document.getElementById('weekdays');
-    const currentDayElement = document.querySelector(`.weekdays div:nth-child(${currentDate.getDate()})`);
-    
-    if (currentDayElement) {
-        const containerWidth = weekdaysContainer.clientWidth;
-        const dayOffset = currentDayElement.offsetLeft - (containerWidth / 2) + (currentDayElement.offsetWidth / 2);
-        const scrollStep = (dayOffset - weekdaysContainer.scrollLeft) / 1; // Уменьшить значение для более медленной прокрутки
-        let currentScroll = weekdaysContainer.scrollLeft;
-        
-        function smoothScroll() {
-            if (Math.abs(currentScroll - dayOffset) > Math.abs(scrollStep)) {
-                currentScroll += scrollStep;
-                weekdaysContainer.scrollLeft = currentScroll;
-                requestAnimationFrame(smoothScroll); // Запускаем плавную анимацию
-            } else {
-                weekdaysContainer.scrollLeft = dayOffset; // Устанавливаем окончательную позицию
+        function checkTaskTime(taskTime, circle) {
+            const [hours, minutes] = taskTime.split(':').map(Number);
+            const taskDate = new Date();
+            taskDate.setHours(hours, minutes, 0, 0);
+
+            const now = new Date();
+            if (now >= taskDate) {
+                circle.classList.add('checked');
+                circle.innerHTML = '&#10003;'; // Checkmark symbol
             }
         }
-        
-        smoothScroll();
-    }
-}
+
+        function scrollToCurrentDay() {
+            const weekdaysContainer = document.getElementById('weekdays');
+            const currentDayElement = document.querySelector(`.weekdays div:nth-child(${currentDate.getDate()})`);
+            
+            if (currentDayElement) {
+                const containerWidth = weekdaysContainer.clientWidth;
+                const dayOffset = currentDayElement.offsetLeft - (containerWidth / 2) + (currentDayElement.offsetWidth / 2);
+                const scrollStep = (dayOffset - weekdaysContainer.scrollLeft) / 1; // Уменьшить значение для более медленной прокрутки
+                let currentScroll = weekdaysContainer.scrollLeft;
+
+                function smoothScroll() {
+                    if (Math.abs(currentScroll - dayOffset) > Math.abs(scrollStep)) {
+                        currentScroll += scrollStep;
+                        weekdaysContainer.scrollLeft = currentScroll;
+                        requestAnimationFrame(smoothScroll); // Запускаем плавную анимацию
+                    } else {
+                        weekdaysContainer.scrollLeft = dayOffset; // Устанавливаем окончательную позицию
+                    }
+                }
+
+                smoothScroll();
+            }
+        }
 
         function selectDay(day) {
             currentDate.setDate(day);

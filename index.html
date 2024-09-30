@@ -308,12 +308,12 @@ function updateTaskList() {
         
         if (!hasTasks) { // Если задач нет, выводим сообщение
             const li = document.createElement('li');
-            li.textContent = "Нет занятий на этот день.";
+            li.textContent = "ВЫХОДНОЙ";
             taskList.appendChild(li);        
         }
     } else {
         const li = document.createElement('li');
-        li.textContent = "Нет занятий на этот день.";
+        li.textContent = "ВЫХОДНОЙ";
         taskList.appendChild(li);        
     }
 }

@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            scrollbar-width: none;
             user-select: none;
         }
 
@@ -45,6 +44,9 @@
             margin-top: 15px;
             padding: 10px 0;
             scroll-behavior: smooth;
+        }
+        .weekdays::-webkit-scrollbar {
+            display: none;
         }
 
         .weekdays div {

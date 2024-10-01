@@ -1,34 +1,208 @@
-// Обработка Excel файла и вывод задач
-document.getElementById('excel-file').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
+let scheduleData = {
+    "30/09/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2С3" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2С3" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "01/10/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "Физкультура", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А5" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А5" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "02/10/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А5" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А5" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "03/10/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "Физкультура", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А5" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А5" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "04/10/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А5" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А5" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "05/10/2024": [
+        { time: "9:00-10:30", subject: "", room: "" },
+        { time: "10:40-12:10", subject: "", room: "" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А5" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А5" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "07/10/2024": [
+        { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+        { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+        { time: "13:20-14:50", subject: "Математический анализ", room: "2А2" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "08/10/2024": [
+        { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+        { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+        { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+        { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "09/10/2024": [
+        { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+        { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+        { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+        { time: "15:00-16:30", subject: "", room: "" },
+        { time: "16:40-18:10", subject: "", room: "" }
+    ],
+    "10/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"11/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Математический анализ", room: "2А2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"12/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Математический анализ", room: "2А2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"14/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Математический анализ", room: "2А2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"15/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"16/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"17/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"18/10/2024": [
+    { time: "9:00-10:30", subject: "Математический анализ", room: "2А2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Иностранный язык", room: "2А4, 2С2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"19/10/2024": [
+    { time: "9:00-10:30", subject: "Операционные системы", room: "1С2" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Математический анализ", room: "2А2" },
+    { time: "15:00-16:30", subject: "Математический анализ", room: "2А2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+"21/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "Физкультура", room: "" },
+    { time: "13:20-14:50", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
 
-    reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
+"22/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
 
-        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        displayTasks(json);
-    };
-});
+"23/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
 
-function displayTasks(data) {
-    const taskList = document.getElementById('task-list');
-    taskList.innerHTML = ''; // Очистить предыдущие задачи
+"24/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
 
-    // Пример: предполагаем, что первая строка содержит заголовки, а последующие строки — задачи
-    for (let i = 1; i < data.length; i++) {
-        const task = data[i];
-        const time = task[0];
-        const description = task[1];
-        const status = task[2]; // Например, "Done", "In Progress", "Upcoming"
+"25/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "Физкультура", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
 
-        const li = document.createElement('li');
-        li.classList.add(status.toLowerCase().replace(' ', '-'));
-        li.innerHTML = `<span>${time}</span> <span>${description}</span>`;
-        taskList.appendChild(li);
-    }
-}
+"26/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+
+"28/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+
+"29/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+
+"30/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "", room: "" },
+    { time: "13:20-14:50", subject: "Операционные системы", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+],
+
+"31/10/2024": [
+    { time: "9:00-10:30", subject: "", room: "" },
+    { time: "10:40-12:10", subject: "Операционные системы", room: "1С2" },
+    { time: "13:20-14:50", subject: "Практикум на ЭВМ", room: "1С2" },
+    { time: "15:00-16:30", subject: "", room: "" },
+    { time: "16:40-18:10", subject: "", room: "" }
+]
+    
+        };

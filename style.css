@@ -1,77 +1,202 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-.schedule-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 20px;
-}
+        body {
+            background-color: #4e54c8;
+        }
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
 
-.calendar {
-    background-color: #4e54c8;
-    padding: 20px;
-    border-radius: 15px;
-    color: #fff;
-}
+        .schedule-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 70px 0 10px;
+            background-color: #4e54c8;
+        }
 
-.month {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-    font-weight: bold;
-}
+        .calendar {
+            background-color: #4e54c8;
+            padding: 20px 0;
+            color: #fff;
+        }
 
-.weekdays {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
+        .month {
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-.weekdays span {
-    background-color: #5a60ea;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    width: 40px;
-}
+        .weekdays {
+            display: flex;
+            overflow-x: auto;
+            margin-top: 15px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+        .weekdays::-webkit-scrollbar {
+            display: none;
+        }
 
-.weekdays .active {
-    background-color: #fff;
-    color: #4e54c8;
-}
+        .weekdays div {
+            text-align: center;
+            flex-shrink: 0;
+            width: 50px;
+            margin-right: 10px;
+        }
 
-.tasks {
-    margin-top: 20px;
-}
+        .weekdays div:first-child {
+            margin-left: 10px;
+        }
 
-.tasks h2 {
-    font-size: 24px;
-    color: #4e54c8;
-    margin-bottom: 10px;
-}
+        .day-block {
+            background-color: #5a60ea;
+            border-radius: 20px;
+            padding: 5px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 60px;
+            cursor: pointer;
+        }
+
+        .weekdays .active {
+            background-color: #fff;
+            color: #4e54c8;
+        }
+
+        .tasks {
+            margin-top: 10px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 40px 40px 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(100% - 230px);
+            overflow-y: auto;
+        }
+        
+        .tasks::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tasks-title {
+            font-size: 24px;
+            color: #4e54c8;
+        }
+
 
 .tasks ul {
     list-style: none;
+    padding-left: 40px; /* Отступ для размещения линий */
+    position: relative; /* Для абсолютного позиционирования */
 }
 
+.tasks ul::before {
+    content: '';
+    position: absolute;
+    left: 16px; /* Начало линии от блока */
+    top: 0; /* Начало линии сверху */
+    bottom: 0; /* Конец линии снизу */
+    width: 2px; /* Ширина линии */
+    background-color: #e7e7fd; /* Цвет линии */
+}
+
+/* Общие стили для задач */
 .tasks ul li {
-    background-color: #e7e7fd;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 16px;
+    position: relative;
+    height: 80px;
+}
+
+.tasks ul li span {
+    font-size: 14px; /* Размер шрифта для времени и кабинета */
+}
+
+.tasks ul li .subject {
+    font-weight: bold;
     font-size: 16px;
 }
 
-.tasks ul li.done {
-    background-color: #d1ffd1;
+/* Стили для цветов блоков и кругов */
+.tasks ul li.color-1 {
+    background-color: #ddddff; /* Цвет блока */
 }
+.tasks ul li.color-1::before {
+    border-color: #ddddff; /* Цвет круга */
+}
+
+.tasks ul li.color-2 {
+    background-color: #caedff;
+}
+.tasks ul li.color-2::before {
+    border-color: #caedff;
+}
+
+.tasks ul li.color-3 {
+    background-color: #caf7f4;
+}
+.tasks ul li.color-3::before {
+    border-color: #caf7f4;
+}
+
+.tasks ul li.color-4 {
+    background-color: #fee1dd;
+}
+.tasks ul li.color-4::before {
+    border-color: #fee1dd;
+}
+
+/* Пятый цвет */
+.tasks ul li.color-5 {
+    background-color: #ffd1e1; /* Подобранный цвет */
+}
+.tasks ul li.color-5::before {
+    border-color: #ffd1e1;
+}
+.tasks ul li::before {
+    content: '';
+    position: absolute;
+    left: -31px; /* Расположение круга слева от линии */
+    top: 50%; /* Центрируем круг по вертикали */
+    transform: translateY(-50%); /* Центрируем круг по вертикали */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%; /* Круг */
+    border: 2px solid #4e54c8; /* Цвет круга */
+    background-color: #fff; /* Цвет фона круга */
+    z-index: 1; /* Круг над линией */
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.tasks ul li.completed::before {
+    background-color: #4e54c8; /* Закрашенный круг после завершения */
+    border-color: #4e54c8; /* Цвет обводки круга */
+}
+
+.tasks ul li.active::before {
+    background-color: #fff; /* Цвет круга во время выполнения */
+    border-color: #4e54c8; /* Цвет обводки круга */
+}
+
+.otstup {
+    height: 20px;
+    }
+        

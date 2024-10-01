@@ -489,36 +489,47 @@
 function updateTaskList() {
     const taskList = document.getElementById('task-list');
     taskList.innerHTML = '';
-    const dateKey = `${String(currentDate.getDate()).padStart(2, '0')}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${currentDate.getFullYear()}`;
 
+    // Проверяем, является ли выбранный день воскресеньем (0 — это воскресенье)
+    if (currentDate.getDay() === 0) {
+        const weekendMessage = document.createElement('div');
+        weekendMessage.textContent = 'ВЫХОДНОЙ';
+        
+        // Добавляем стили для большего и жирного шрифта
+        weekendMessage.style.fontSize = '30px';
+        weekendMessage.style.fontWeight = 'bold';
+        weekendMessage.style.textAlign = 'center'; // Центрируем текст
+        weekendMessage.style.color = '#4e54c8'; // Цвет текста
+        weekendMessage.style.marginTop = '0px'; // Отступ сверху
+
+        taskList.appendChild(weekendMessage);
+        return; // Выходим из функции, так как нет задач для воскресенья
+    }
+
+    const dateKey = `${String(currentDate.getDate()).padStart(2, '0')}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${currentDate.getFullYear()}`;
     const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5']; // Список цветов
 
     if (scheduleData[dateKey]) {
         scheduleData[dateKey].forEach((task, index) => {
             const li = document.createElement('li');
             
-            // Создание структуры для задачи
             const timeSpan = document.createElement('span');
             timeSpan.textContent = task.time;
 
             const subjectSpan = document.createElement('span');
             subjectSpan.textContent = task.subject || ' ';
-            subjectSpan.classList.add('subject'); // Добавляем класс для жирного шрифта
+            subjectSpan.classList.add('subject');
 
             const roomSpan = document.createElement('span');
             roomSpan.textContent = task.room || ' ';
-            roomSpan.classList.add('room'); // Добавляем класс для уменьшенного шрифта
+            roomSpan.classList.add('room');
 
-            // Применение цвета из списка по индексу
             li.classList.add(colors[index % colors.length]);
-
-            // Добавление элементов в блок задачи
             li.appendChild(timeSpan);
             li.appendChild(subjectSpan);
             li.appendChild(roomSpan);
             li.classList.add('task-item');
 
-            // Проверка на активную пару
             const currentTime = new Date();
             const [startTime, endTime] = task.time.split('-').map(t => {
                 const [hours, minutes] = t.split(':').map(Number);
@@ -526,13 +537,13 @@ function updateTaskList() {
             });
 
             if (currentTime >= startTime && currentTime < endTime) {
-                li.classList.add('active'); // Устанавливаем класс для активной пары
+                li.classList.add('active');
                 const checkmark = document.createElement('span');
                 checkmark.className = 'checkmark';
-                checkmark.innerHTML = '&#10003;'; // Галочка
+                checkmark.innerHTML = '&#10003;';
                 li.appendChild(checkmark);
             } else if (currentTime >= endTime) {
-                li.classList.add('completed'); // Устанавливаем класс для завершенной пары
+                li.classList.add('completed');
             }
 
             taskList.appendChild(li);

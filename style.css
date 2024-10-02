@@ -1,4 +1,5 @@
-* {
+
+        * {
             -webkit-tap-highlight-color: transparent;
             margin: 0;
             padding: 0;
@@ -9,7 +10,7 @@
         body {
             background-color: #4e54c8;
         }
-        
+
         body::-webkit-scrollbar {
             display: none;
         }
@@ -25,6 +26,20 @@
             background-color: #4e54c8;
             padding: 20px 0;
             color: #fff;
+        }
+
+        .menu-button {
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .menu-button svg {
+            width: 100%;
+            height: 100%;
         }
 
         .month {
@@ -86,7 +101,7 @@
             height: calc(100% - 230px);
             overflow-y: auto;
         }
-        
+
         .tasks::-webkit-scrollbar {
             display: none;
         }
@@ -186,23 +201,104 @@
     transition: background-color 0.3s, border 0.3s;
 }
 
-.tasks ul li.completed::before {
-    background-color: #4e54c8; /* Закрашенный круг после завершения */
-    border-color: #4e54c8; /* Цвет обводки круга */
-}
+        .tasks ul li.completed::before {
+            background-color: #4e54c8;
+            border-color: #4e54c8;
+        }
 
-.tasks ul li.active::before {
-    background-color: #fff; /* Цвет круга во время выполнения */
-    border-color: #4e54c8; /* Цвет обводки круга */
-}
+        .tasks ul li.active::before {
+            background-color: #fff;
+            border-color: #4e54c8; /* Цвет обводки круга */
+        }
 
-.otstup {
-    height: 20px;
-    }
-    .checkmark {
+        .otstup {
+            height: 20px;
+        }
+    
+        .checkmark {
             display: none;
             font-weight: bold;
             font-size: 18px;
             color: #4e54c8;
         }
         
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    animation: modal-appear 0.5s ease-in-out forwards;
+}
+
+.modal-hide {
+    animation: modal-disappear 0.5s ease-in-out forwards;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    width: 300px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+    font-size: 20px;
+    color: #4e54c8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.group-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.group-item {
+    background-color: #4e54c8;
+    color: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.close-modal {
+    background-color: #4e54c8;
+    color: #fff;
+    padding: 10px;
+    width: 100%;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+@keyframes modal-appear {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modal-disappear {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+}

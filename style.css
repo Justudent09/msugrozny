@@ -199,4 +199,10 @@
 .otstup {
     height: 20px;
     }
+    .checkmark {
+            display: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: #4e54c8;
+        }
         

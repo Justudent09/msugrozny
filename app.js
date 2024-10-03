@@ -98,7 +98,6 @@ function closeModal() {
     groupModal.classList.add('modal-hide');
     groupModal.addEventListener('animationend', () => {
         groupModal.style.display = 'none';
-        updateTaskList(currentDate); // Обновляем расписание после закрытия модала
     }, { once: true });
 }
 

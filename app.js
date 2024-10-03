@@ -1,3 +1,4 @@
+let currentDate = new Date();
 function updateMonthName() {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const monthNameElement = document.getElementById('month-name');
@@ -82,7 +83,7 @@ function checkTaskCompletion() {
         }
     });
 }
-let currentDate = new Date();
+
 let selectedGroup = ''; // Переменная для хранения выбранной группы
 
 const menuButton = document.getElementById('menu-button');

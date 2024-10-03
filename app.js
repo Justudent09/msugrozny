@@ -248,6 +248,12 @@ setInterval(() => {
     checkTaskCompletion();
 }, 60000);
 
-updateMonthName();
-updateWeekdays();
-updateTaskList(currentDate);
+document.addEventListener('DOMContentLoaded', () => {
+    updateMonthName();
+    updateWeekdays();
+
+    // Убедитесь, что функция вызывается один раз при загрузке
+    if (!document.querySelector('#taskList').hasChildNodes()) {
+        updateTaskList(currentDate);
+    }
+});

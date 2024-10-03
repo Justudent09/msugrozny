@@ -183,6 +183,20 @@ function updateTaskList(date) {
                         <span class="room">${room}</span>
                     `;
 
+if (typeof subject === 'number') {
+        li.innerHTML = `
+            <span>${timeSlots[j]}</span>
+            <span class="subject"> </span> <!-- Пустое значение -->
+            <span class="room">${room}</span>
+        `;
+    } else {
+        li.innerHTML = `
+            <span>${timeSlots[j]}</span>
+            <span class="subject">${subject}</span>
+            <span class="room">${room}</span>
+        `;
+    }
+
                     // Проверка текущего времени
                     const currentTime = new Date();
                     const [startTime, endTime] = timeSlots[j].split('-').map(t => {

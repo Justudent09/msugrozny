@@ -59,16 +59,18 @@ function selectDay(day) {
 
 function checkTaskCompletion() {
     const taskList = document.getElementById('taskList');
-    const currentTime = new Date();
+    const currentTime = new Date(currentDate); // Используем выбранную дату
     const taskItems = taskList.querySelectorAll('li');
     
     taskItems.forEach((item, index) => {
         const timeText = item.querySelector('span').textContent;
         const [startTime, endTime] = timeText.split('-').map(t => {
             const [hours, minutes] = t.split(':').map(Number);
-            return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
+            return new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), hours, minutes);
         });
         
+        item.querySelectorAll('.checkmark').forEach(check => check.remove()); // Удаляем старые отметки
+
         if (currentTime >= startTime && currentTime < endTime) {
             item.classList.add('active');
             const checkmark = document.createElement('span');

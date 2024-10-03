@@ -17,19 +17,19 @@ function updateWeekdays() {
         const div = document.createElement('div');
         div.className = 'day-block';
         div.onclick = () => selectDay(i);
-        
+
         const dayAbbreviation = document.createElement('span');
         dayAbbreviation.textContent = weekdayNames[date.getDay()];
 
         const dayNumber = document.createElement('span');
         dayNumber.textContent = `${i}`;
-        
+
         div.appendChild(dayAbbreviation);
         div.appendChild(dayNumber);
         weekdaysContainer.appendChild(div);
     }
 
-    selectDay(currentDate.getDate());
+    selectDay(currentDate.getDate()); // Выбор текущего дня и обновление стиля
     scrollToCurrentDay();
 }
 

@@ -116,7 +116,7 @@ function updateTaskList(date) {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = ''; // Очищаем предыдущие задачи
 
-    const filePath = './schedule.xlsx'; // Путь к файлу в репозитории
+    const filePath = './Расписание_осень_24_октябрь_v1.xlsx'; // Путь к файлу в репозитории
 
     fetch(filePath)
         .then(response => response.arrayBuffer())

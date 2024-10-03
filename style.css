@@ -130,7 +130,7 @@
 
 /* Общие стили для задач */
 .tasks ul li {
-    padding: 15px;
+    padding: 5px;
     border-radius: 10px;
     margin-bottom: 10px;
     display: flex;

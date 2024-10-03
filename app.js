@@ -44,7 +44,7 @@ function scrollToCurrentDay() {
 }
 
 function selectDay(day) {
-    if (currentDate.getDate() === day) return; // Проверка, чтобы не вызывать updateTaskList при выборе уже активного дня
+    
     currentDate.setDate(day);
 
     document.querySelectorAll('.weekdays div').forEach(div => {

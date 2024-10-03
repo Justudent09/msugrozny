@@ -1,4 +1,3 @@
-let currentDate = new Date();
 function updateMonthName() {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const monthNameElement = document.getElementById('month-name');
@@ -17,19 +16,19 @@ function updateWeekdays() {
         const div = document.createElement('div');
         div.className = 'day-block';
         div.onclick = () => selectDay(i);
-
+        
         const dayAbbreviation = document.createElement('span');
         dayAbbreviation.textContent = weekdayNames[date.getDay()];
 
         const dayNumber = document.createElement('span');
         dayNumber.textContent = `${i}`;
-
+        
         div.appendChild(dayAbbreviation);
         div.appendChild(dayNumber);
         weekdaysContainer.appendChild(div);
     }
 
-    selectDay(currentDate.getDate()); // Выбор текущего дня и обновление стиля
+    selectDay(currentDate.getDate());
     scrollToCurrentDay();
 }
 
@@ -44,9 +43,9 @@ function scrollToCurrentDay() {
 }
 
 function selectDay(day) {
-    
     currentDate.setDate(day);
 
+    // Снятие активного класса с предыдущего дня
     document.querySelectorAll('.weekdays div').forEach(div => {
         div.classList.remove('active');
     });
@@ -54,31 +53,22 @@ function selectDay(day) {
     const selectedDayDiv = document.querySelector(`.weekdays div:nth-child(${day})`);
     selectedDayDiv.classList.add('active');
 
+    // Обновление расписания при выборе дня
     updateTaskList(currentDate); // Обновляем расписание на выбранный день
 }
 
 function checkTaskCompletion() {
-    // Обновляем currentDate перед каждой проверкой
-    currentDate = new Date(); // Обновляем на текущую дату и время
     const taskList = document.getElementById('taskList');
     const currentTime = new Date();
     const taskItems = taskList.querySelectorAll('li');
-
+    
     taskItems.forEach((item, index) => {
         const timeText = item.querySelector('span').textContent;
         const [startTime, endTime] = timeText.split('-').map(t => {
             const [hours, minutes] = t.split(':').map(Number);
             return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
         });
-
-        // Удаление старых классов и галочек
-        item.classList.remove('active', 'completed');
-        const existingCheckmark = item.querySelector('.checkmark');
-        if (existingCheckmark) {
-            existingCheckmark.remove();
-        }
-
-        // Проверка временного интервала и добавление нужного состояния
+        
         if (currentTime >= startTime && currentTime < endTime) {
             item.classList.add('active');
             const checkmark = document.createElement('span');
@@ -90,7 +80,7 @@ function checkTaskCompletion() {
         }
     });
 }
-
+let currentDate = new Date();
 let selectedGroup = ''; // Переменная для хранения выбранной группы
 
 const menuButton = document.getElementById('menu-button');
@@ -108,8 +98,7 @@ function closeModal() {
     groupModal.classList.add('modal-hide');
     groupModal.addEventListener('animationend', () => {
         groupModal.style.display = 'none';
-        // Убедитесь, что updateTaskList вызывается только, если группа поменялась
-        updateTaskList(currentDate);
+        updateTaskList(currentDate); // Обновляем расписание после закрытия модала
     }, { once: true });
 }
 

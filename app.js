@@ -252,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMonthName();
     updateWeekdays();
 
-    // Убедитесь, что функция вызывается один раз при загрузке
-    updateTaskList(currentDate);
+    // Проверяем, есть ли уже элементы в taskList
+    if (!document.querySelector('#taskList').hasChildNodes()) {
+        updateTaskList(currentDate);
+    }
 });

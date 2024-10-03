@@ -24,7 +24,7 @@
     <div class="tasks">
         <h2 class="tasks-title">Today's Tasks</h2>
                 <div class="otstup"></div>
-        <ul id="task-list"></ul>
+        <ul id="taskList"></ul>
     </div>
 
     <div class="modal" id="group-modal">
@@ -43,154 +43,9 @@
             <button class="close-modal" id="close-modal">Закрыть</button>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script src="app.js"></script>
-    <script>
-        let currentDate = new Date();
-        const menuButton = document.getElementById('menu-button');
-const groupModal = document.getElementById('group-modal');
-const closeModalButton = document.getElementById('close-modal');
-const groupItems = document.querySelectorAll('.group-item');
 
-menuButton.addEventListener('click', () => {
-    groupModal.style.display = 'flex';
-    groupModal.classList.remove('modal-hide'); // Удаляем класс, если он был добавлен ранее
-});
-
-function closeModal() {
-    groupModal.classList.add('modal-hide'); // Добавляем класс с анимацией закрытия
-    groupModal.addEventListener('animationend', () => {
-        groupModal.style.display = 'none'; // После завершения анимации скрываем элемент
-    }, { once: true }); // Используем once: true, чтобы обработчик вызвался только один раз
-}
-
-closeModalButton.addEventListener('click', closeModal);
-
-groupItems.forEach(item => {
-    item.addEventListener('click', closeModal);
-});
-                function updateMonthName() {
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const monthNameElement = document.getElementById('month-name');
-            monthNameElement.textContent = `${monthNames[currentDate.getMonth()]}, ${currentDate.getFullYear()}`;
-        }
-        function updateWeekdays() {
-            const weekdaysContainer = document.getElementById('weekdays');
-            weekdaysContainer.innerHTML = '';
-            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-            const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            for (let i = 1; i <= daysInMonth; i++) {
-                const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
-                const div = document.createElement('div');
-                div.className = 'day-block';
-                div.onclick = () => selectDay(i);
-                const dayAbbreviation = document.createElement('span');
-                dayAbbreviation.textContent = weekdayNames[date.getDay()];
-                const dayNumber = document.createElement('span');
-                dayNumber.textContent = `${i}`;
-                div.appendChild(dayAbbreviation);
-                div.appendChild(dayNumber);
-                weekdaysContainer.appendChild(div);
-            }
-            selectDay(currentDate.getDate());
-            scrollToCurrentDay();
-        }
-        function scrollToCurrentDay() {
-            const weekdaysContainer = document.getElementById('weekdays');
-            const currentDayElement = document.querySelector(`.weekdays div:nth-child(${currentDate.getDate()})`);
-            if (currentDayElement) {
-                const containerWidth = weekdaysContainer.clientWidth;
-                const dayOffset = currentDayElement.offsetLeft - (containerWidth / 2) + (currentDayElement.offsetWidth / 2);
-                weekdaysContainer.scrollLeft = dayOffset;
-            }
-        }
-        function selectDay(day) {
-            currentDate.setDate(day);
-            document.querySelectorAll('.weekdays div').forEach(div => {
-                div.classList.remove('active');
-            });
-            const selectedDayDiv = document.querySelector(`.weekdays div:nth-child(${day})`);
-            selectedDayDiv.classList.add('active');
-            updateTaskList();
-        }
-function updateTaskList() {
-    const taskList = document.getElementById('task-list');
-    taskList.innerHTML = '';
-    if (currentDate.getDay() === 0) {
-        const weekendMessage = document.createElement('div');
-        weekendMessage.textContent = 'ВЫХОДНОЙ';
-        weekendMessage.style.fontSize = '30px';
-        weekendMessage.style.fontWeight = 'bold';
-        weekendMessage.style.textAlign = 'center';
-        weekendMessage.style.color = '#4e54c8';
-        weekendMessage.style.marginTop = '0px';
-        taskList.appendChild(weekendMessage);
-        return; 
-    }
-    const dateKey = `${String(currentDate.getDate()).padStart(2, '0')}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${currentDate.getFullYear()}`;
-    const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5'];
-    if (scheduleData[dateKey]) {
-        scheduleData[dateKey].forEach((task, index) => {
-            const li = document.createElement('li');
-            const timeSpan = document.createElement('span');
-            timeSpan.textContent = task.time;
-            const subjectSpan = document.createElement('span');
-            subjectSpan.textContent = task.subject || ' ';
-            subjectSpan.classList.add('subject');
-            const roomSpan = document.createElement('span');
-            roomSpan.textContent = task.room || ' ';
-            roomSpan.classList.add('room');
-            li.classList.add(colors[index % colors.length]);
-            li.appendChild(timeSpan);
-            li.appendChild(subjectSpan);
-            li.appendChild(roomSpan);
-            li.classList.add('task-item');
-            const currentTime = new Date();
-            const [startTime, endTime] = task.time.split('-').map(t => {
-                const [hours, minutes] = t.split(':').map(Number);
-                return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
-            });
-            if (currentTime >= startTime && currentTime < endTime) {
-                li.classList.add('active');
-                const checkmark = document.createElement('span');
-                checkmark.className = 'checkmark';
-                checkmark.innerHTML = '&#10003;';
-                li.appendChild(checkmark);
-            } else if (currentTime >= endTime) {
-                li.classList.add('completed');
-            }
-            taskList.appendChild(li);
-        });
-    }
-}
-        function checkTaskCompletion() {
-            const taskList = document.getElementById('task-list');
-            const currentTime = new Date();
-            const taskItems = taskList.querySelectorAll('li');
-            taskItems.forEach((item, index) => {
-                const timeText = item.textContent.split(' - ')[0];
-                const [startTime, endTime] = timeText.split('-').map(t => {
-                    const [hours, minutes] = t.split(':').map(Number);
-                    return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
-                });
-                if (currentTime >= startTime && currentTime < endTime) {
-                    item.classList.add('active');
-                    const checkmark = document.createElement('span');
-                    checkmark.className = 'checkmark';
-                    checkmark.innerHTML = '&#10003;';
-                    item.appendChild(checkmark);
-                } else if (currentTime >= endTime) {
-                    item.classList.add('completed');
-                }
-            });
-        }
-        setInterval(() => {
-            updateTaskList();
-            checkTaskCompletion();
-        }, 60000);
-        updateMonthName();
-        updateWeekdays();
-        updateTaskList();
-    </script>
 </body>
 </html>

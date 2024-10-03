@@ -59,6 +59,8 @@ function selectDay(day) {
 }
 
 function checkTaskCompletion() {
+    // Обновляем currentDate перед каждой проверкой
+    currentDate = new Date(); // Обновляем на текущую дату и время
     const taskList = document.getElementById('taskList');
     const currentTime = new Date();
     const taskItems = taskList.querySelectorAll('li');

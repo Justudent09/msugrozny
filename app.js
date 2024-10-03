@@ -101,7 +101,6 @@ function closeModal() {
     }, { once: true });
 }
 
-closeModalButton.addEventListener('click', closeModal);
 groupItems.forEach(item => {
     item.addEventListener('click', () => {
         selectedGroup = item.getAttribute('data-group'); // Устанавливаем выбранную группу

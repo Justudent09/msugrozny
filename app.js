@@ -44,9 +44,9 @@ function scrollToCurrentDay() {
 }
 
 function selectDay(day) {
+    if (currentDate.getDate() === day) return; // Проверка, чтобы не вызывать updateTaskList при выборе уже активного дня
     currentDate.setDate(day);
 
-    // Снятие активного класса с предыдущего дня
     document.querySelectorAll('.weekdays div').forEach(div => {
         div.classList.remove('active');
     });
@@ -54,7 +54,6 @@ function selectDay(day) {
     const selectedDayDiv = document.querySelector(`.weekdays div:nth-child(${day})`);
     selectedDayDiv.classList.add('active');
 
-    // Обновление расписания при выборе дня
     updateTaskList(currentDate); // Обновляем расписание на выбранный день
 }
 

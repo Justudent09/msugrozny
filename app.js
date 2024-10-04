@@ -231,4 +231,3 @@ setInterval(() => {
 
 updateMonthName();
 updateWeekdays();
-updateTaskList(currentDate);

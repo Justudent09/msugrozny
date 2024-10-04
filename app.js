@@ -122,6 +122,10 @@ groupItems.forEach(item => {
 });
 
 function updateTaskList(date) {
+    // Очищаем список задач перед обновлением
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+
     // Загружаем Excel-файл, расположенный в репозитории
     fetch('Расписание_осень_24_октябрь_v1.xlsx')
         .then(response => response.arrayBuffer())

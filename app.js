@@ -126,121 +126,103 @@ function updateTaskList(date) {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
-    // Загружаем Excel-файл, расположенный в репозитории
     fetch('Расписание_осень_24_октябрь_v1.xlsx')
         .then(response => response.arrayBuffer())
         .then(data => {
-            // Преобразуем загруженные данные в формат Excel и извлекаем содержимое первого листа
             const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-            // Обрабатываем данные и обновляем список задач на основе выбранной даты
-            processTaskList(jsonData, date);
+            const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+            function jsDateToExcelDate(jsDate) {
+                const excelEpoch = new Date(Date.UTC(1900, 0, 1)).getTime();
+                const jsDateMillis = jsDate.getTime();
+                return Math.floor((jsDateMillis - excelEpoch) / (1000 * 60 * 60 * 24)) + 2;
+            }
+
+            const targetDateValue = jsDateToExcelDate(new Date(dateKey));
+            let targetRowIndex = -1;
+
+            // Поиск строки, соответствующей выбранной дате
+            for (let i = 0; i < jsonData.length; i++) {
+                const cellValue = jsonData[i][1]; 
+                if (typeof cellValue === 'number' && cellValue === targetDateValue) {
+                    targetRowIndex = i;
+                    break;
+                }
+            }
+
+            if (targetRowIndex !== -1) {
+                const timeSlots = [
+                    '9:00-10:30',
+                    '10:40-12:10',
+                    '13:20-14:50',
+                    '15:00-16:30',
+                    '16:40-18:10'
+                ];
+
+                const groupMapping = {
+                    'ПМИ-2курс': [14, 15],
+                    'Менеджмент-2курс': [12, 13],
+                    'Юриспруденция-2курс': [16, 17],
+                    'ПМИ-1курс': [3, 4],
+                    'Менеджмент-1курс': [1, 2],
+                    'Юриспруденция-1курс': [5, 6],
+                    'Биотехнология-1курс': [7, 8],
+                    'Фармация-1курс': [9, 10],
+                };
+
+                const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2]; 
+
+                // Перебираем временные слоты и формируем элементы списка
+                for (let j = 0; j < timeSlots.length; j++) {
+                    const row = jsonData[targetRowIndex + 2 + j];
+                    const li = document.createElement('li');
+                    li.classList.add(`color-${(j % 5) + 1}`);
+
+                    const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
+                    const room = row ? (row[roomCol] !== undefined ? row[roomCol] : ' ') : ' ';
+
+                    li.innerHTML = `
+                        <span>${timeSlots[j]}</span>
+                        <span class="subject">${typeof subject === 'number' ? ' ' : subject}</span>
+                        <span class="room">${room}</span>
+                    `;
+
+                    // Логика выделения текущего слота
+                    const currentTime = new Date();
+                    const [startTime, endTime] = timeSlots[j].split('-').map(t => {
+                        const [hours, minutes] = t.split(':').map(Number);
+                        return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
+                    });
+
+                    // Проверка на активный или завершённый слот
+                    if (currentTime >= startTime && currentTime < endTime) {
+                        li.classList.add('active');
+                        const checkmark = document.createElement('span');
+                        checkmark.className = 'checkmark';
+                        checkmark.innerHTML = '&#10003;';
+                        li.appendChild(checkmark);
+                    } else if (currentTime >= endTime) {
+                        li.classList.add('completed');
+                    }
+
+                    taskList.appendChild(li);
+                }
+            } else {
+                // Показ сообщения "Выходной", если нет данных на эту дату
+                const weekendMessage = document.createElement('div');
+                weekendMessage.textContent = 'ВЫХОДНОЙ';
+                weekendMessage.style.fontSize = '30px';
+                weekendMessage.style.fontWeight = 'bold';
+                weekendMessage.style.textAlign = 'center';
+                weekendMessage.style.color = '#4e54c8';
+                weekendMessage.style.marginTop = '0px';
+                taskList.appendChild(weekendMessage);
+            }
         })
         .catch(error => console.error('Ошибка загрузки файла:', error));
-}
-
-function processTaskList(jsonData, date) {
-    const taskList = document.getElementById('taskList');
-    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-
-    function jsDateToExcelDate(jsDate) {
-        const excelEpoch = new Date(Date.UTC(1900, 0, 1)).getTime();
-        const jsDateMillis = jsDate.getTime();
-        return Math.floor((jsDateMillis - excelEpoch) / (1000 * 60 * 60 * 24)) + 2;
-    }
-
-    const targetDateValue = jsDateToExcelDate(new Date(dateKey));
-    let targetRowIndex = -1;
-
-    for (let i = 0; i < jsonData.length; i++) {
-        const cellValue = jsonData[i][1]; 
-
-        if (typeof cellValue === 'number' && cellValue === targetDateValue) {
-            targetRowIndex = i;
-            break;
-        }
-    }
-
-    if (targetRowIndex !== -1) {
-        const timeSlots = [
-            '9:00-10:30',
-            '10:40-12:10',
-            '13:20-14:50',
-            '15:00-16:30',
-            '16:40-18:10'
-        ];
-
-        const groupMapping = {
-            'ПМИ-2курс': [14, 15],
-            'Менеджмент-2курс': [12, 13],
-            'Юриспруденция-2курс': [16, 17],
-            'ПМИ-1курс': [3, 4],
-            'Менеджмент-1курс': [1, 2],
-            'Юриспруденция-1курс': [5, 6],
-            'Биотехнология-1курс': [7, 8],
-            'Фармация-1курс': [9, 10],
-        };
-
-        const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2]; 
-
-        for (let j = 0; j < timeSlots.length; j++) {
-            const row = jsonData[targetRowIndex + 2 + j];
-            const li = document.createElement('li');
-            li.classList.add(`color-${(j % 5) + 1}`);
-
-            const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
-            const room = row ? (row[roomCol] !== undefined ? row[roomCol] : ' ') : ' ';
-
-            li.innerHTML = `
-                <span>${timeSlots[j]}</span>
-                <span class="subject">${subject}</span>
-                <span class="room">${room}</span>
-            `;
-            
-            if (typeof subject === 'number') {
-                li.innerHTML = `
-                    <span>${timeSlots[j]}</span>
-                    <span class="subject"> </span> 
-                    <span class="room">${room}</span>
-                `;
-            } else {
-                li.innerHTML = `
-                    <span>${timeSlots[j]}</span>
-                    <span class="subject">${subject}</span>
-                    <span class="room">${room}</span>
-                `;
-            }
-
-            const currentTime = new Date();
-            const [startTime, endTime] = timeSlots[j].split('-').map(t => {
-                const [hours, minutes] = t.split(':').map(Number);
-                return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
-            });
-
-            if (currentTime >= startTime && currentTime < endTime) {
-                li.classList.add('active');
-                const checkmark = document.createElement('span');
-                checkmark.className = 'checkmark';
-                checkmark.innerHTML = '&#10003;';
-                li.appendChild(checkmark);
-            } else if (currentTime >= endTime) {
-                li.classList.add('completed');
-            }
-
-            taskList.appendChild(li);
-        }
-    } else {
-        const weekendMessage = document.createElement('div');
-        weekendMessage.textContent = 'ВЫХОДНОЙ';
-        weekendMessage.style.fontSize = '30px';
-        weekendMessage.style.fontWeight = 'bold';
-        weekendMessage.style.textAlign = 'center';
-        weekendMessage.style.color = '#4e54c8';
-        weekendMessage.style.marginTop = '0px';
-        taskList.appendChild(weekendMessage);
-    }
 }
 
 setInterval(() => {

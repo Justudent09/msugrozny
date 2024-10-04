@@ -146,7 +146,7 @@ function updateTaskList(date) {
 
             // Поиск строки, соответствующей выбранной дате
             for (let i = 0; i < jsonData.length; i++) {
-                const cellValue = jsonData[i][1];
+                const cellValue = jsonData[i][1]; 
                 if (typeof cellValue === 'number' && cellValue === targetDateValue) {
                     targetRowIndex = i;
                     break;
@@ -173,9 +173,7 @@ function updateTaskList(date) {
                     'Фармация-1курс': [9, 10],
                 };
 
-                const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2];
-
-                let tasksFound = false;
+                const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2]; 
 
                 // Перебираем временные слоты и формируем элементы списка
                 for (let j = 0; j < timeSlots.length; j++) {
@@ -185,11 +183,6 @@ function updateTaskList(date) {
 
                     const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
                     const room = row ? (row[roomCol] !== undefined ? row[roomCol] : ' ') : ' ';
-
-                    // Если на этот слот предмет найден, то помечаем, что есть задачи
-                    if (subject !== ' ' || room !== ' ') {
-                        tasksFound = true;
-                    }
 
                     li.innerHTML = `
                         <span>${timeSlots[j]}</span>
@@ -201,7 +194,7 @@ function updateTaskList(date) {
                     const currentTime = new Date();
                     const [startTime, endTime] = timeSlots[j].split('-').map(t => {
                         const [hours, minutes] = t.split(':').map(Number);
-                        return new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), hours, minutes);
+                        return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
                     });
 
                     // Проверка на активный или завершённый слот
@@ -217,28 +210,19 @@ function updateTaskList(date) {
 
                     taskList.appendChild(li);
                 }
-
-                // Если предметов не нашлось, выводим "Выходной"
-                if (!tasksFound) {
-                    showWeekendMessage(taskList);
-                }
-
             } else {
-                showWeekendMessage(taskList);
+                // Показ сообщения "Выходной", если нет данных на эту дату
+                const weekendMessage = document.createElement('div');
+                weekendMessage.textContent = 'ВЫХОДНОЙ';
+                weekendMessage.style.fontSize = '30px';
+                weekendMessage.style.fontWeight = 'bold';
+                weekendMessage.style.textAlign = 'center';
+                weekendMessage.style.color = '#4e54c8';
+                weekendMessage.style.marginTop = '0px';
+                taskList.appendChild(weekendMessage);
             }
         })
         .catch(error => console.error('Ошибка загрузки файла:', error));
-}
-
-function showWeekendMessage(taskList) {
-    const weekendMessage = document.createElement('div');
-    weekendMessage.textContent = 'ВЫХОДНОЙ';
-    weekendMessage.style.fontSize = '30px';
-    weekendMessage.style.fontWeight = 'bold';
-    weekendMessage.style.textAlign = 'center';
-    weekendMessage.style.color = '#4e54c8';
-    weekendMessage.style.marginTop = '0px';
-    taskList.appendChild(weekendMessage);
 }
 
 setInterval(() => {

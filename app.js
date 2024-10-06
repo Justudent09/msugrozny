@@ -96,19 +96,11 @@ let groupChanged = false;
 let tg = window.Telegram.WebApp;
 let telegramID = tg.initDataUnsafe.user.id; // Извлечение ID пользователя
 
-document.addEventListener('DOMContentLoaded', () => {
-    const savedGroup = localStorage.getItem(`selectedGroup_${telegramID}`);
-    if (savedGroup) {
-        selectedGroup = savedGroup;
-        updateTaskList(currentDate);
-    }
-});
-
 function closeModal() {
     groupModal.classList.add('modal-hide');
     groupModal.addEventListener('animationend', () => {
         groupModal.style.display = 'none';
-        if (groupChanged) {
+        if (groupChanged) { 
             groupChanged = false;
         }
     }, { once: true });
@@ -118,12 +110,7 @@ groupItems.forEach(item => {
     item.addEventListener('click', () => {
         selectedGroup = item.getAttribute('data-group');
         groupChanged = true;
-
-        // Сохраняем выбранную группу в localStorage
-        localStorage.setItem(`selectedGroup_${telegramID}`, selectedGroup);
-
         closeModal();
-        updateTaskList(currentDate); 
     });
 });
 

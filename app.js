@@ -143,7 +143,6 @@ function updateTaskList(date) {
             const targetDateValue = jsDateToExcelDate(new Date(dateKey));
             let targetRowIndex = -1;
 
-            // Поиск строки, соответствующей выбранной дате
             for (let i = 0; i < jsonData.length; i++) {
                 const cellValue = jsonData[i][1]; 
                 if (typeof cellValue === 'number' && cellValue === targetDateValue) {
@@ -173,21 +172,19 @@ function updateTaskList(date) {
                 };
 
                 const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2]; 
-                let isHoliday = true; // Изначально предполагаем, что все слоты пусты
+                let isHoliday = true;
 
-                // Перебираем временные слоты и формируем элементы списка
                 for (let j = 0; j < timeSlots.length; j++) {
                     const row = jsonData[targetRowIndex + 2 + j];
                     const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
 
                     if (typeof subject === 'string' && subject.trim() !== '') {
-                        isHoliday = false; // Если найден непустой предмет, то это не выходной
+                        isHoliday = false;
                         break;
                     }
                 }
 
                 if (isHoliday) {
-                    // Показ сообщения "Выходной", если нет данных на эту дату
                     const weekendMessage = document.createElement('div');
                     weekendMessage.textContent = 'ВЫХОДНОЙ';
                     weekendMessage.style.fontSize = '30px';
@@ -231,7 +228,6 @@ function updateTaskList(date) {
                     }
                 }
             } else {
-                // Показ сообщения "Выходной", если нет данных на эту дату
                 const weekendMessage = document.createElement('div');
                 weekendMessage.textContent = 'ВЫХОДНОЙ';
                 weekendMessage.style.fontSize = '30px';

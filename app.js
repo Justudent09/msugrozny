@@ -122,7 +122,6 @@ groupItems.forEach(item => {
 });
 
 function updateTaskList(date) {
-    // Очищаем список задач перед обновлением
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
@@ -174,41 +173,62 @@ function updateTaskList(date) {
                 };
 
                 const [subjectCol, roomCol] = groupMapping[selectedGroup] || [1, 2]; 
+                let isHoliday = true; // Изначально предполагаем, что все слоты пусты
 
                 // Перебираем временные слоты и формируем элементы списка
                 for (let j = 0; j < timeSlots.length; j++) {
                     const row = jsonData[targetRowIndex + 2 + j];
-                    const li = document.createElement('li');
-                    li.classList.add(`color-${(j % 5) + 1}`);
-
                     const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
-                    const room = row ? (row[roomCol] !== undefined ? row[roomCol] : ' ') : ' ';
 
-                    li.innerHTML = `
-                        <span>${timeSlots[j]}</span>
-                        <span class="subject">${typeof subject === 'number' ? ' ' : subject}</span>
-                        <span class="room">${room}</span>
-                    `;
-
-                    // Логика выделения текущего слота
-                    const currentTime = new Date();
-                    const [startTime, endTime] = timeSlots[j].split('-').map(t => {
-                        const [hours, minutes] = t.split(':').map(Number);
-                        return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
-                    });
-
-                    // Проверка на активный или завершённый слот
-                    if (currentTime >= startTime && currentTime < endTime) {
-                        li.classList.add('active');
-                        const checkmark = document.createElement('span');
-                        checkmark.className = 'checkmark';
-                        checkmark.innerHTML = '&#10003;';
-                        li.appendChild(checkmark);
-                    } else if (currentTime >= endTime) {
-                        li.classList.add('completed');
+                    if (typeof subject === 'string' && subject.trim() !== '') {
+                        isHoliday = false; // Если найден непустой предмет, то это не выходной
+                        break;
                     }
+                }
 
-                    taskList.appendChild(li);
+                if (isHoliday) {
+                    // Показ сообщения "Выходной", если нет данных на эту дату
+                    const weekendMessage = document.createElement('div');
+                    weekendMessage.textContent = 'ВЫХОДНОЙ';
+                    weekendMessage.style.fontSize = '30px';
+                    weekendMessage.style.fontWeight = 'bold';
+                    weekendMessage.style.textAlign = 'center';
+                    weekendMessage.style.color = '#4e54c8';
+                    weekendMessage.style.marginTop = '0px';
+                    taskList.appendChild(weekendMessage);
+                } else {
+                    for (let j = 0; j < timeSlots.length; j++) {
+                        const row = jsonData[targetRowIndex + 2 + j];
+                        const li = document.createElement('li');
+                        li.classList.add(`color-${(j % 5) + 1}`);
+
+                        const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
+                        const room = row ? (row[roomCol] !== undefined ? row[roomCol] : ' ') : ' ';
+
+                        li.innerHTML = `
+                            <span>${timeSlots[j]}</span>
+                            <span class="subject">${typeof subject === 'number' ? ' ' : subject}</span>
+                            <span class="room">${room}</span>
+                        `;
+
+                        const currentTime = new Date();
+                        const [startTime, endTime] = timeSlots[j].split('-').map(t => {
+                            const [hours, minutes] = t.split(':').map(Number);
+                            return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
+                        });
+
+                        if (currentTime >= startTime && currentTime < endTime) {
+                            li.classList.add('active');
+                            const checkmark = document.createElement('span');
+                            checkmark.className = 'checkmark';
+                            checkmark.innerHTML = '&#10003;';
+                            li.appendChild(checkmark);
+                        } else if (currentTime >= endTime) {
+                            li.classList.add('completed');
+                        }
+
+                        taskList.appendChild(li);
+                    }
                 }
             } else {
                 // Показ сообщения "Выходной", если нет данных на эту дату

@@ -93,9 +93,6 @@ menuButton.addEventListener('click', () => {
 });
 let groupChanged = false;
 
-let tg = window.Telegram.WebApp;
-let telegramID = tg.initDataUnsafe.user.id; // Извлечение ID пользователя
-
 function closeModal() {
     groupModal.classList.add('modal-hide');
     groupModal.addEventListener('animationend', () => {

@@ -79,7 +79,7 @@ function checkTaskCompletion() {
     });
 }
 let currentDate = new Date();
-let selectedGroup = ''; 
+let selectedGroup = 'ПМИ-2курс';
 
 const menuButton = document.getElementById('menu-button');
 const groupModal = document.getElementById('group-modal');

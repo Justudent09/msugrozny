@@ -14,6 +14,9 @@
                     <path d="M1 0h5a1 1 0 1 1 0 2H1a1 1 0 1 1 0-2zm7 8h5a1 1 0 0 1 0 2H8a1 1 0 1 1 0-2zM1 4h12a1 1 0 0 1 0 2H1a1 1 0 1 1 0-2z"/>
                 </svg>
             </div>
+            <div class="lit" id="lit">
+                
+            </div>
             <div class="month">
                 <span class="month-name" id="month-name"></span>
             </div>
@@ -22,9 +25,11 @@
     </div>
 
     <div class="tasks">
+        <div class="schedule">
         <h2 class="tasks-title">Today's Tasks</h2>
                 <div class="otstup"></div>
         <ul id="taskList"></ul>
+        </div>
     </div>
 
     <div class="modal" id="group-modal">
@@ -43,6 +48,15 @@
             <button class="close-modal" id="close-modal">Закрыть</button>
         </div>
     </div>
+    <div class="modal" id="empty-pairs-modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Время для чтения</h2>
+        <div class="lit-div">
+            <ul class="group-item" id="emptyPairsList"></ul>
+        </div>
+        <button class="close-modal" id="close-empty-pairs-modal">Закрыть</button>
+    </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 

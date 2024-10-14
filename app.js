@@ -241,6 +241,113 @@ function updateTaskList(date) {
         .catch(error => console.error('Ошибка загрузки файла:', error));
 }
 
+let jsonData;
+
+fetch('Расписание_осень_24_октябрь_v1.xlsx')
+    .then(response => response.arrayBuffer())
+    .then(data => {
+        const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+    })
+    .catch(error => console.error('Ошибка загрузки файла:', error));
+
+document.getElementById('lit').addEventListener('click', () => {
+    if (!jsonData) {
+        console.error('Данные из Excel не загружены');
+        return;
+    }
+
+    const emptyPairsList = document.getElementById('emptyPairsList');
+    emptyPairsList.innerHTML = '';
+
+    const groupsToCheck = ['ПМИ-2курс', 'Юриспруденция-2курс', 'Менеджмент-2курс'];
+
+    const groupMapping = {
+        'ПМИ-2курс': [14, 15],
+        'Менеджмент-2курс': [12, 13],
+        'Юриспруденция-2курс': [16, 17]
+    };
+
+    let litcircl = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+
+    for (let i = 0; i < jsonData.length; i++) {
+        const cellValue = jsonData[i][1];
+        if (typeof cellValue !== 'number') continue;
+
+        const excelDate = cellValue;
+        const jsDate = new Date(Date.UTC(1900, 0, excelDate - 1));
+        jsDate.setHours(0, 0, 0, 0); 
+
+        let allGroupsHavePairs = true;
+        groupsToCheck.forEach(group => {
+            const [subjectCol] = groupMapping[group];
+            let hasPair = false;
+
+            for (let j = 0; j < 4; j++) {
+                const row = jsonData[i + 2 + j];
+                const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
+
+                if (subject && subject.trim() !== '') {
+                    hasPair = true;
+                    break;
+                }
+            }
+
+            if (!hasPair) {
+                allGroupsHavePairs = false;
+            }
+        });
+
+        if (!allGroupsHavePairs) {
+            continue;
+        }
+
+        for (let j = 0; j < 4; j++) {
+            let emptyGroups = 0;
+
+            groupsToCheck.forEach(group => {
+                const [subjectCol] = groupMapping[group];
+                const row = jsonData[i + 2 + j];
+
+                const subject = row ? (row[subjectCol] !== undefined ? row[subjectCol] : ' ') : ' ';
+                if (!subject || subject.trim() === '') {
+                    emptyGroups++;
+                }
+            });
+
+            let li = document.createElement('li');
+            let dateText = (jsDate.getTime() === today.getTime()) ? 'сегодня' : jsDate.toLocaleDateString();
+
+            if (emptyGroups === 3) {
+                li.style.color = 'gold';
+                li.innerHTML = `<h3>${dateText} - ${j + 1}-я пара</h3>`;
+            } else if (emptyGroups >= 2) {
+                li.innerHTML = `<h3>${dateText} - ${j + 1}-я пара</h3>`;
+            }
+
+            if (emptyGroups >= 2) {
+                emptyPairsList.appendChild(li);
+                litcircl += 1;
+            }
+        }
+    }
+
+    if (litcircl < 1) {
+        const li = document.createElement('li');
+        li.innerHTML = `<h3>нет свободных пар</h3>`;
+        emptyPairsList.appendChild(li);
+    }
+
+    document.getElementById('empty-pairs-modal').style.display = 'flex';  
+});
+
+document.getElementById('close-empty-pairs-modal').addEventListener('click', () => {
+    document.getElementById('empty-pairs-modal').style.display = 'none';
+});
+
 setInterval(() => {
     checkTaskCompletion();
 }, 60000);

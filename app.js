@@ -86,6 +86,7 @@ const groupModal = document.getElementById('group-modal');
 const closeModalButton = document.getElementById('close-modal');
 const groupItems = document.querySelectorAll('.group-item');
 const uploadInput = document.getElementById('upload');
+const emptyPairs = document.getElementById('empty-pairs-modal')
 
 menuButton.addEventListener('click', () => {
     groupModal.style.display = 'flex';
@@ -341,11 +342,17 @@ document.getElementById('lit').addEventListener('click', () => {
         emptyPairsList.appendChild(li);
     }
 
-    document.getElementById('empty-pairs-modal').style.display = 'flex';  
+    emptyPairs.style.display = 'flex';  
 });
 
 document.getElementById('close-empty-pairs-modal').addEventListener('click', () => {
-    document.getElementById('empty-pairs-modal').style.display = 'none';
+    emptyPairs.classList.add('modal-hide');
+    
+    emptyPairs.addEventListener('animationend', function handleAnimationEnd() {
+        emptyPairs.style.display = 'none';
+        emptyPairs.classList.remove('modal-hide'); 
+        emptyPairs.removeEventListener('animationend', handleAnimationEnd);
+    }, { once: true });
 });
 
 setInterval(() => {

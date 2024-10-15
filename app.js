@@ -1,5 +1,5 @@
 function updateMonthName() {
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Aвгуст", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     const monthNameElement = document.getElementById('month-name');
     monthNameElement.textContent = `${monthNames[currentDate.getMonth()]}, ${currentDate.getFullYear()}`;
 }
@@ -9,7 +9,7 @@ function updateWeekdays() {
     weekdaysContainer.innerHTML = ''; 
 
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-    const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
     for (let i = 1; i <= daysInMonth; i++) {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);

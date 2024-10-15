@@ -137,7 +137,7 @@
         }
 
         .tasks ul li {
-            padding: 5px;
+            padding: 10px;
             border-radius: 10px;
             margin-bottom: 10px;
             display: flex;
@@ -145,7 +145,7 @@
             align-items: flex-start;
             font-size: 16px;
             position: relative;
-            height: 80px;
+            height: auto;
         }
 
         .tasks ul li span {

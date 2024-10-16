@@ -274,13 +274,26 @@ document.getElementById('lit').addEventListener('click', () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); 
 
+    const currentTime = new Date(); // Текущее время
+    const pairTimes = [
+        new Date().setHours(10, 30, 0),   // 1-я пара (10:30)
+        new Date().setHours(12, 10, 0), // 2-я пара (12:10)
+        new Date().setHours(14, 50, 0), // 3-я пара (14:50)
+        new Date().setHours(16, 30, 0)   // 4-я пара (16:30)
+    ];
+
     for (let i = 0; i < jsonData.length; i++) {
         const cellValue = jsonData[i][1];
         if (typeof cellValue !== 'number') continue;
 
         const excelDate = cellValue;
         const jsDate = new Date(Date.UTC(1900, 0, excelDate - 1));
-        jsDate.setHours(0, 0, 0, 0); 
+        jsDate.setHours(0, 0, 0, 0); // Сбрасываем время на 00:00 для корректного сравнения
+
+        // Пропускаем даты, которые были до сегодняшнего дня
+        if (jsDate < today) {
+            continue;
+        }
 
         let allGroupsHavePairs = true;
         groupsToCheck.forEach(group => {
@@ -309,6 +322,11 @@ document.getElementById('lit').addEventListener('click', () => {
         for (let j = 0; j < 4; j++) {
             let emptyGroups = 0;
 
+            // Пропускаем уже прошедшие пары за текущий день
+            if (jsDate.getTime() === today.getTime() && currentTime.getTime() > pairTimes[j]) {
+                continue;
+            }
+
             groupsToCheck.forEach(group => {
                 const [subjectCol] = groupMapping[group];
                 const row = jsonData[i + 2 + j];
@@ -335,6 +353,7 @@ document.getElementById('lit').addEventListener('click', () => {
             }
         }
     }
+
 
     if (litcircl < 1) {
         const li = document.createElement('li');

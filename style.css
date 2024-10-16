@@ -30,6 +30,7 @@
         
         .lit{
             position: absolute;
+            display: none;
             top: 40px;
             right: 20px;
             width: 50px;

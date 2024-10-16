@@ -1,7 +1,7 @@
 let tg = window.Telegram.WebApp;
 
 // Список разрешённых ID
-const allowedIDs = ['5136839421', '1033479948'];
+const allowedIDs = ['942573399','894041982','716244479','5136839421', '1033479948'];
 
 // Функция для проверки ID и отображения блока
 function checkUserAccess() {

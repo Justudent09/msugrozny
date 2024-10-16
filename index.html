@@ -1,68 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link rel="stylesheet" href="style.css">
-    <title>Schedule Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка Telegram ID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #enableButton {
+            display: none; /* Скрываем кнопку по умолчанию */
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #enableButton:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="schedule-container">
-        <div class="calendar">
-            <div class="menu-button" id="menu-button">
-                <svg fill="#ffffff" viewBox="-5 -7 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" class="jam jam-menu">
-                    <path d="M1 0h5a1 1 0 1 1 0 2H1a1 1 0 1 1 0-2zm7 8h5a1 1 0 0 1 0 2H8a1 1 0 1 1 0-2zM1 4h12a1 1 0 0 1 0 2H1a1 1 0 1 1 0-2z"/>
-                </svg>
-            </div>
-            <div class="lit" id="lit">
-                
-            </div>
-            <div class="month">
-                <span class="month-name" id="month-name"></span>
-            </div>
-            <div class="weekdays" id="weekdays"></div>
-        </div>
+    <div class="container">
+        <button id="enableButton">Включить</button>
+        <div class="message" id="message">Проверяем ваш ID...</div>
     </div>
 
-    <div class="tasks">
-        <div class="schedule">
-        <h2 class="tasks-title">Расписание пар</h2>
-                <div class="otstup"></div>
-        <ul id="taskList"></ul>
-        </div>
-    </div>
+    <script>
+        // Записываем объект WebApp в переменную tg
+        let tg = window.Telegram.WebApp;
 
-    <div class="modal" id="group-modal">
-        <div class="modal-content">
-            <h2 class="modal-title">Выбор группы</h2>
-            <ul class="group-list">
-                <li class="group-item" data-group="ПМИ-2курс">ПМИ-2курс</li>
-                <li class="group-item" data-group="Менеджмент-2курс">Менеджмент-2курс</li>
-                <li class="group-item" data-group="Юриспруденция-2курс">Юриспруденция-2курс</li>
-                <li class="group-item" data-group="ПМИ-1курс">ПМИ-1курс</li>
-                <li class="group-item" data-group="Менеджмент-1курс">Менеджмент-1курс</li>
-                <li class="group-item" data-group="Юриспруденция-1курс">Юриспруденция-1курс</li>
-                <li class="group-item" data-group="Фармация-1курс">Фармация-1курс</li>
-                <li class="group-item" data-group="Биотехнология-1курс">Биотехнология-1курс</li>
-            </ul>
-            <button class="close-modal" id="close-modal">Закрыть</button>
-        </div>
-    </div>
-    <div class="modal" id="empty-pairs-modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Время для чтения</h2>
-        <div class="lit-div">
-            <ul class="group-items" id="emptyPairsList"></ul>
-        </div>
-        <button class="close-modal" id="close-empty-pairs-modal">Закрыть</button>
-    </div>
-</div>
+        // Функция для проверки ID пользователя
+        function checkTelegramID() {
+            const user = tg.initDataUnsafe?.user; // Достаём информацию о пользователе
+            const userID = user ? String(user.id) : null;
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+            // Список разрешённых ID
+            const allowedIDs = ['5136839421', '1033479948'];
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+            const enableButton = document.getElementById('enableButton');
+            const message = document.getElementById('message');
 
-    <script src="app.js"></script>
+            // Проверяем, входит ли ID в список разрешённых
+            if (userID && allowedIDs.includes(userID)) {
+                enableButton.style.display = 'block'; // Показать кнопку
+                message.textContent = `Добро пожаловать, ${user.first_name}!`;
+            } else {
+                message.textContent = 'У вас нет доступа к этой кнопке.';
+            }
+        }
 
+        // Ждём готовности WebApp и выполняем проверку
+        tg.ready();
+        document.addEventListener('DOMContentLoaded', checkTelegramID);
+    </script>
 </body>
 </html>

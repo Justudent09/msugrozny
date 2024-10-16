@@ -1,3 +1,19 @@
+        * {
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: #4e54c8;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }      
+
         .menu-button {
             position: absolute;
             top: 40px;
@@ -19,22 +35,6 @@
             width: 50px;
             height: 50px;
             cursor: pointer;
-        }
-        
-        * {
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
-        body {
-            background-color: #4e54c8;
-        }
-
-        body::-webkit-scrollbar {
-            display: none;
         }
 
         .schedule-container {

@@ -4,7 +4,7 @@
         function checkTelegramID() {
             const userID = user ? String(user.id) : null;
 
-            const allowedIDs = ['1033479948'];
+            const allowedIDs = ['5136839421','1033479948'];
 
             const enableButton = document.getElementById('lit');
 

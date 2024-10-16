@@ -1,4 +1,24 @@
+let tg = window.Telegram.WebApp;
 
+// Список разрешённых ID
+const allowedIDs = ['5136839421', '1033479948'];
+
+// Функция для проверки ID и отображения блока
+function checkUserAccess() {
+    const user = tg.initDataUnsafe?.user;
+    const userID = user ? String(user.id) : null;
+    const litElement = document.getElementById('lit');
+
+    if (userID && allowedIDs.includes(userID)) {
+        litElement.style.display = 'block'; // Отображаем блок
+    } else {
+        litElement.style.display = 'none'; // Скрываем блок
+    }
+}
+
+// Запускаем проверку при загрузке
+tg.ready();
+document.addEventListener('DOMContentLoaded', checkUserAccess);
 
 function updateMonthName() {
     const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Aвгуст", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];

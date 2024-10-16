@@ -1,3 +1,22 @@
+       // Записываем объект WebApp в переменную tg
+        let tg = window.Telegram.WebApp;
+
+        function checkTelegramID() {
+            const userID = user ? String(user.id) : null;
+
+            const allowedIDs = ['1033479948'];
+
+            const enableButton = document.getElementById('lit');
+
+            if (userID && allowedIDs.includes(userID)) {
+                enableButton.style.display = 'block';
+            }
+        }
+
+        // Ждём готовности WebApp и выполняем проверку
+        tg.ready();
+        document.addEventListener('DOMContentLoaded', checkTelegramID);
+
 function updateMonthName() {
     const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Aвгуст", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     const monthNameElement = document.getElementById('month-name');

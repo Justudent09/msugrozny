@@ -1,23 +1,20 @@
 let tg = window.Telegram.WebApp;
-let selectedGroup = 'ПМИ-2курс'; // Группа по умолчанию
+let selectedGroup = 'ПМИ-2курс';
 
-// Список разрешённых ID
 const allowedIDs = ['942573399','894041982','716244479','5136839421', '1033479948'];
 
-// Функция для проверки ID и отображения блока
 function checkUserAccess() {
     const user = tg.initDataUnsafe?.user;
     const userID = user ? String(user.id) : null;
     const litElement = document.getElementById('lit');
 
     if (userID && allowedIDs.includes(userID)) {
-        litElement.style.display = 'block'; // Отображаем блок
+        litElement.style.display = 'block';
     } else {
-        litElement.style.display = 'none'; // Скрываем блок
+        litElement.style.display = 'none';
     }
 }
 
-// Запускаем проверку при загрузке
 tg.ready();
 document.addEventListener('DOMContentLoaded', checkUserAccess);
 
@@ -296,12 +293,12 @@ document.getElementById('lit').addEventListener('click', () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); 
 
-    const currentTime = new Date(); // Текущее время
+    const currentTime = new Date();
     const pairTimes = [
-        new Date().setHours(10, 30, 0),   // 1-я пара (10:30)
-        new Date().setHours(12, 10, 0), // 2-я пара (12:10)
-        new Date().setHours(14, 50, 0), // 3-я пара (14:50)
-        new Date().setHours(16, 30, 0)   // 4-я пара (16:30)
+        new Date().setHours(10, 30, 0), 
+        new Date().setHours(12, 10, 0), 
+        new Date().setHours(14, 50, 0), 
+        new Date().setHours(16, 30, 0) 
     ];
 
     for (let i = 0; i < jsonData.length; i++) {
@@ -310,9 +307,8 @@ document.getElementById('lit').addEventListener('click', () => {
 
         const excelDate = cellValue;
         const jsDate = new Date(Date.UTC(1900, 0, excelDate - 1));
-        jsDate.setHours(0, 0, 0, 0); // Сбрасываем время на 00:00 для корректного сравнения
+        jsDate.setHours(0, 0, 0, 0); 
 
-        // Пропускаем даты, которые были до сегодняшнего дня
         if (jsDate < today) {
             continue;
         }
@@ -344,7 +340,6 @@ document.getElementById('lit').addEventListener('click', () => {
         for (let j = 0; j < 4; j++) {
             let emptyGroups = 0;
 
-            // Пропускаем уже прошедшие пары за текущий день
             if (jsDate.getTime() === today.getTime() && currentTime.getTime() > pairTimes[j]) {
                 continue;
             }

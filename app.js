@@ -1,4 +1,45 @@
 let tg = window.Telegram.WebApp;
+let selectedGroup = 'ПМИ-2курс'; // Группа по умолчанию
+
+// Функция для получения сохранённой группы
+function loadUserGroup() {
+    const user = tg.initDataUnsafe?.user;
+    const userID = user ? String(user.id) : null;
+
+    if (userID) {
+        const savedGroup = localStorage.getItem(`group_${userID}`);
+        if (savedGroup) {
+            selectedGroup = savedGroup;
+            updateTaskList(currentDate); // Обновить расписание для сохранённой группы
+        }
+    }
+}
+
+// Функция для сохранения выбранной группы
+function saveUserGroup(group) {
+    const user = tg.initDataUnsafe?.user;
+    const userID = user ? String(user.id) : null;
+
+    if (userID) {
+        localStorage.setItem(`group_${userID}`, group);
+    }
+}
+
+// Обработчик выбора группы
+groupItems.forEach(item => {
+    item.addEventListener('click', () => {
+        selectedGroup = item.getAttribute('data-group');
+        saveUserGroup(selectedGroup); // Сохранить выбранную группу
+        closeModal();
+        updateTaskList(currentDate); // Обновить расписание для новой группы
+    });
+});
+
+// Загружаем сохранённую группу при загрузке страницы
+tg.ready();
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserGroup(); // Загрузка группы
+});
 
 // Список разрешённых ID
 const allowedIDs = ['942573399','894041982','716244479','5136839421', '1033479948'];
@@ -101,7 +142,6 @@ function checkTaskCompletion() {
     });
 }
 let currentDate = new Date();
-let selectedGroup = 'ПМИ-2курс';
 
 const menuButton = document.getElementById('menu-button');
 const groupModal = document.getElementById('group-modal');

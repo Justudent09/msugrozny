@@ -1,5 +1,9 @@
 let tg = window.Telegram.WebApp;
 let selectedGroup = 'ПМИ-2курс';
+let jsonData;
+let currentDate = new Date();
+let groupChanged = false;
+
 
 const allowedIDs = ['942573399','894041982','716244479','5136839421', '1033479948'];
 
@@ -98,7 +102,6 @@ function checkTaskCompletion() {
         }
     });
 }
-let currentDate = new Date();
 
 const menuButton = document.getElementById('menu-button');
 const groupModal = document.getElementById('group-modal');
@@ -111,7 +114,6 @@ menuButton.addEventListener('click', () => {
     groupModal.style.display = 'flex';
     groupModal.classList.remove('modal-hide');
 });
-let groupChanged = false;
 
 function closeModal() {
     groupModal.classList.add('modal-hide');
@@ -260,8 +262,6 @@ function updateTaskList(date) {
         })
         .catch(error => console.error('Ошибка загрузки файла:', error));
 }
-
-let jsonData;
 
 fetch('Расписание_осень_24_октябрь_v1.xlsx')
     .then(response => response.arrayBuffer())

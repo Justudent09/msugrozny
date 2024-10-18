@@ -147,7 +147,7 @@ function updateTaskList(date) {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
-    fetch('Расписание_осень_24_октябрь_v1.xlsx')
+    fetch('Расписание_осень_24_октябрь_V1.xlsx')
         .then(response => response.arrayBuffer())
         .then(data => {
             const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });

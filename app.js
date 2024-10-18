@@ -263,7 +263,7 @@ function updateTaskList(date) {
         .catch(error => console.error('Ошибка загрузки файла:', error));
 }
 
-fetch('Расписание_осень_24_октябрь_v1.xlsx')
+fetch('Расписание_осень_24_октябрь_V1.xlsx')
     .then(response => response.arrayBuffer())
     .then(data => {
         const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });

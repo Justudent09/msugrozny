@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <title>Schedule Bot</title>
 </head>
+
 <body>
     <div class="schedule-container">
         <div class="calendar">
@@ -53,15 +55,16 @@
             <button class="close-modal" id="close-modal">Закрыть</button>
         </div>
     </div>
+
     <div class="modal" id="empty-pairs-modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Время для чтения</h2>
-        <div class="lit-div">
-            <ul class="group-items" id="emptyPairsList"></ul>
+        <div class="modal-content">
+            <h2 class="modal-title">Время для чтения</h2>
+            <div class="lit-div">
+                <ul class="group-items" id="emptyPairsList"></ul>
+            </div>
+            <button class="close-modal" id="close-empty-pairs-modal">Закрыть</button>
         </div>
-        <button class="close-modal" id="close-empty-pairs-modal">Закрыть</button>
     </div>
-</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -69,4 +72,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>

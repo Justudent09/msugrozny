@@ -355,7 +355,7 @@ document.getElementById('lit').addEventListener('click', () => {
             });
 
             let li = document.createElement('li');
-            let dateText = (jsDate.getTime() === today.getTime()) ? '_сегодня_' : jsDate.getDate().toString().padStart(2, '0') + '/' + (jsDate.getMonth() + 1).toString().padStart(2, '0') + '/' + jsDate.getFullYear();
+            let dateText = (jsDate.getTime() === today.getTime()) ? '▪︎_сегодня_▪︎' : jsDate.getDate().toString().padStart(2, '0') + '/' + (jsDate.getMonth() + 1).toString().padStart(2, '0') + '/' + jsDate.getFullYear();
 
             if (emptyGroups === 3) {
                 li.style.color = 'gold';

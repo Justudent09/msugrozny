@@ -370,7 +370,6 @@ document.getElementById('lit').addEventListener('click', () => {
         }
     }
 
-
     if (litcircl < 1) {
         const li = document.createElement('li');
         li.innerHTML = `<h3>нет свободных пар</h3>`;

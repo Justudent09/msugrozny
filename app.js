@@ -4,7 +4,6 @@ let jsonData;
 let currentDate = new Date();
 let groupChanged = false;
 
-
 const allowedIDs = ['942573399','887422835','894041982','716244479','5136839421', '1033479948'];
 
 function checkUserAccess() {

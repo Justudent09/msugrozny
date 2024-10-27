@@ -3,6 +3,7 @@ let selectedGroup = 'ПМИ-2курс';
 let jsonData;
 let currentDate = new Date();
 let groupChanged = false;
+let linkschedule = 'Расписание.xlsx';
 
 const allowedIDs = ['942573399','887422835','894041982','716244479','5136839421', '1033479948'];
 
@@ -146,7 +147,7 @@ function updateTaskList(date) {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
-    fetch('Расписание.xlsx')
+    fetch(linkschedule)
         .then(response => response.arrayBuffer())
         .then(data => {
             const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
@@ -262,7 +263,7 @@ function updateTaskList(date) {
         .catch(error => console.error('Ошибка загрузки файла:', error));
 }
 
-fetch('Расписание.xlsx')
+fetch(linkschedule)
     .then(response => response.arrayBuffer())
     .then(data => {
         const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });

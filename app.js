@@ -77,7 +77,7 @@ function addFirstDayOfNextMonth() {
 
     const div = document.createElement('div');
     div.className = 'day-block';
-    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear());
+    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик клика для нового дня
 
     const dayAbbreviation = document.createElement('span');
     dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
@@ -91,25 +91,26 @@ function addFirstDayOfNextMonth() {
 }
 
 function selectDay(day, month, year) {
-    // Обновляем текущую дату с новыми параметрами
-    currentDate = new Date(year, month, day);
+    // Создаём временную переменную для выбранной даты
+    const selectedDate = new Date(year, month, day);
 
-    // Снимаем выделение со всех дней
+    // Снимаем выделение со всех блоков дня
     document.querySelectorAll('.day-block').forEach(div => {
         div.classList.remove('active');
     });
 
-    // Ищем элемент для выбранного дня
+    // Находим выбранный день и добавляем к нему класс 'active'
     const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
         const dayText = div.querySelector('span:last-child').textContent;
-        return parseInt(dayText) === day && month === currentDate.getMonth() && year === currentDate.getFullYear();
+        return parseInt(dayText) === day && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
     });
 
     if (selectedDayDiv) {
         selectedDayDiv.classList.add('active');
     }
 
-    updateTaskList(currentDate); // Обновляем расписание для выбранного дня
+    // Вызываем updateTaskList с выбранной датой, не меняя currentDate
+    updateTaskList(selectedDate);
 }
 
 function scrollToCurrentDay() {

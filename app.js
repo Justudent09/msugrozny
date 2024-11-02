@@ -39,7 +39,7 @@ function updateWeekdays() {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
         const div = document.createElement('div');
         div.className = 'day-block';
-        div.onclick = () => selectDay(i);
+        div.onclick = () => selectDay(i, currentDate.getMonth(), currentDate.getFullYear());
 
         const dayAbbreviation = document.createElement('span');
         dayAbbreviation.textContent = weekdayNames[date.getDay()];
@@ -52,7 +52,7 @@ function updateWeekdays() {
         weekdaysContainer.appendChild(div);
     }
 
-    selectDay(currentDate.getDate());
+    selectDay(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
     scrollToCurrentDay();
 
     // Добавляем слушатель для скролла
@@ -94,7 +94,7 @@ function addFirstDayOfNextMonth() {
 }
 
 // Обновленная функция selectDay для обработки нового дня
-function selectDay(day, month = currentDate.getMonth(), year = currentDate.getFullYear()) {
+function selectDay(day, month, year) {
     currentDate.setDate(day);
     currentDate.setMonth(month);
     currentDate.setFullYear(year);
@@ -104,9 +104,7 @@ function selectDay(day, month = currentDate.getMonth(), year = currentDate.getFu
     });
 
     const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
-        return div.querySelector('span:last-child').textContent == day && 
-               currentDate.getMonth() === month &&
-               currentDate.getFullYear() === year;
+        return div.querySelector('span:last-child').textContent == day.toString();
     });
 
     if (selectedDayDiv) {

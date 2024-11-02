@@ -40,13 +40,13 @@ function updateWeekdays() {
         const div = document.createElement('div');
         div.className = 'day-block';
         div.onclick = () => selectDay(i);
-        
+
         const dayAbbreviation = document.createElement('span');
         dayAbbreviation.textContent = weekdayNames[date.getDay()];
 
         const dayNumber = document.createElement('span');
         dayNumber.textContent = `${i}`;
-        
+
         div.appendChild(dayAbbreviation);
         div.appendChild(dayNumber);
         weekdaysContainer.appendChild(div);
@@ -54,6 +54,51 @@ function updateWeekdays() {
 
     selectDay(currentDate.getDate());
     scrollToCurrentDay();
+
+    // Добавляем слушатель события скролла
+    weekdaysContainer.addEventListener('scroll', handleScrollForNextMonth);
+}
+
+function handleScrollForNextMonth() {
+    const weekdaysContainer = document.getElementById('weekdays');
+    const maxScrollLeft = weekdaysContainer.scrollWidth - weekdaysContainer.clientWidth;
+    
+    // Проверяем, достигнут ли конец скролла
+    if (weekdaysContainer.scrollLeft >= maxScrollLeft - 10) {
+        // Добавляем слушатель для обнаружения дальнейшего скролла вправо
+        weekdaysContainer.addEventListener('wheel', detectOverscrollToNextMonth, { once: true });
+    }
+}
+
+function detectOverscrollToNextMonth(event) {
+    if (event.deltaY > 0 || event.deltaX > 0) { // Если продолжается скролл вправо
+        addFirstDayOfNextMonth();
+    }
+}
+
+function addFirstDayOfNextMonth() {
+    const weekdaysContainer = document.getElementById('weekdays');
+    
+    // Увеличиваем месяц
+    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
+    // Создаем блок для первого дня следующего месяца
+    const div = document.createElement('div');
+    div.className = 'day-block';
+
+    const dayAbbreviation = document.createElement('span');
+    dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
+
+    const dayNumber = document.createElement('span');
+    dayNumber.textContent = '1';
+
+    div.appendChild(dayAbbreviation);
+    div.appendChild(dayNumber);
+    weekdaysContainer.appendChild(div);
+
+    // Снимаем слушатель, чтобы не дублировать добавление
+    weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth);
 }
 
 function scrollToCurrentDay() {

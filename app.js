@@ -111,6 +111,7 @@ function selectDay(day, month, year) {
 
     // Вызываем updateTaskList с выбранной датой, не меняя currentDate
     updateTaskList(selectedDate);
+    checkTaskCompletion();
 }
 
 function scrollToCurrentDay() {

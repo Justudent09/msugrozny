@@ -77,7 +77,7 @@ function addFirstDayOfNextMonth() {
 
     const div = document.createElement('div');
     div.className = 'day-block';
-    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик клика для нового дня
+    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик для выбора следующего месяца
 
     const dayAbbreviation = document.createElement('span');
     dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
@@ -90,28 +90,27 @@ function addFirstDayOfNextMonth() {
     weekdaysContainer.appendChild(div);
 }
 
-function selectDay(day, month, year) {
-    // Создаём временную переменную для выбранной даты
-    const selectedDate = new Date(year, month, day);
+function selectDay(day, month = currentDate.getMonth(), year = currentDate.getFullYear()) {
+    currentDate.setDate(day);
+    currentDate.setMonth(month);
+    currentDate.setFullYear(year);
 
-    // Снимаем выделение со всех блоков дня
-    document.querySelectorAll('.day-block').forEach(div => {
+    document.querySelectorAll('.weekdays .day-block').forEach(div => {
         div.classList.remove('active');
     });
 
-    // Находим выбранный день и добавляем к нему класс 'active'
+    // Поиск нужного элемента дня с учётом месяца и года
     const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
         const dayText = div.querySelector('span:last-child').textContent;
-        return parseInt(dayText) === day && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
+        return parseInt(dayText) === day && month === currentDate.getMonth() && year === currentDate.getFullYear();
     });
 
     if (selectedDayDiv) {
         selectedDayDiv.classList.add('active');
     }
 
-    // Вызываем updateTaskList с выбранной датой, не меняя currentDate
-    updateTaskList(selectedDate);
-    checkTaskCompletion();
+    updateTaskList(currentDate);
+    checkTaskCompletion(); // Обновляем круги после смены дня
 }
 
 function scrollToCurrentDay() {

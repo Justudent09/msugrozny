@@ -39,7 +39,7 @@ function updateWeekdays() {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
         const div = document.createElement('div');
         div.className = 'day-block';
-        div.onclick = () => selectDay(i, currentDate.getMonth(), currentDate.getFullYear());
+        div.onclick = () => selectDay(i);
 
         const dayAbbreviation = document.createElement('span');
         dayAbbreviation.textContent = weekdayNames[date.getDay()];
@@ -52,65 +52,8 @@ function updateWeekdays() {
         weekdaysContainer.appendChild(div);
     }
 
-    // Выделение сегодняшнего дня при первой загрузке
-    selectDay(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
+    selectDay(currentDate.getDate());
     scrollToCurrentDay();
-
-    // Добавляем слушатель для скролла
-    weekdaysContainer.addEventListener('scroll', handleScrollForNextMonth);
-}
-
-function handleScrollForNextMonth() {
-    const weekdaysContainer = document.getElementById('weekdays');
-    const maxScrollLeft = weekdaysContainer.scrollWidth - weekdaysContainer.clientWidth;
-    
-    if (weekdaysContainer.scrollLeft >= maxScrollLeft - 1) {
-        addFirstDayOfNextMonth();
-        weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth);
-    }
-}
-
-function addFirstDayOfNextMonth() {
-    const weekdaysContainer = document.getElementById('weekdays');
-    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-    const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-
-    const div = document.createElement('div');
-    div.className = 'day-block';
-    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик для выбора следующего месяца
-
-    const dayAbbreviation = document.createElement('span');
-    dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
-
-    const dayNumber = document.createElement('span');
-    dayNumber.textContent = '1';
-
-    div.appendChild(dayAbbreviation);
-    div.appendChild(dayNumber);
-    weekdaysContainer.appendChild(div);
-}
-
-function selectDay(day, month = currentDate.getMonth(), year = currentDate.getFullYear()) {
-    currentDate.setDate(day);
-    currentDate.setMonth(month);
-    currentDate.setFullYear(year);
-
-    document.querySelectorAll('.weekdays .day-block').forEach(div => {
-        div.classList.remove('active');
-    });
-
-    // Поиск нужного элемента дня с учётом месяца и года
-    const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
-        const dayText = div.querySelector('span:last-child').textContent;
-        return parseInt(dayText) === day && month === currentDate.getMonth() && year === currentDate.getFullYear();
-    });
-
-    if (selectedDayDiv) {
-        selectedDayDiv.classList.add('active');
-    }
-
-    updateTaskList(currentDate);
-    checkTaskCompletion(); // Обновляем круги после смены дня
 }
 
 function scrollToCurrentDay() {
@@ -123,6 +66,18 @@ function scrollToCurrentDay() {
     }
 }
 
+function selectDay(day) {
+    currentDate.setDate(day);
+
+    document.querySelectorAll('.weekdays div').forEach(div => {
+        div.classList.remove('active');
+    });
+
+    const selectedDayDiv = document.querySelector(`.weekdays div:nth-child(${day})`);
+    selectedDayDiv.classList.add('active');
+
+    updateTaskList(currentDate);
+}
 
 function checkTaskCompletion() {
     const taskList = document.getElementById('taskList');

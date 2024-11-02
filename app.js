@@ -80,6 +80,7 @@ function addFirstDayOfNextMonth() {
     // Создаем блок для первого дня следующего месяца
     const div = document.createElement('div');
     div.className = 'day-block';
+    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик клика для отображения расписания
 
     const dayAbbreviation = document.createElement('span');
     dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
@@ -92,6 +93,29 @@ function addFirstDayOfNextMonth() {
     weekdaysContainer.appendChild(div);
 }
 
+// Обновленная функция selectDay для обработки нового дня
+function selectDay(day, month = currentDate.getMonth(), year = currentDate.getFullYear()) {
+    currentDate.setDate(day);
+    currentDate.setMonth(month);
+    currentDate.setFullYear(year);
+
+    document.querySelectorAll('.day-block').forEach(div => {
+        div.classList.remove('active');
+    });
+
+    const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
+        return div.querySelector('span:last-child').textContent == day && 
+               currentDate.getMonth() === month &&
+               currentDate.getFullYear() === year;
+    });
+
+    if (selectedDayDiv) {
+        selectedDayDiv.classList.add('active');
+    }
+
+    updateTaskList(currentDate); // Обновляем расписание для выбранного дня
+}
+
 function scrollToCurrentDay() {
     const weekdaysContainer = document.getElementById('weekdays');
     const currentDayElement = document.querySelector(`.weekdays div:nth-child(${currentDate.getDate()})`);
@@ -102,18 +126,6 @@ function scrollToCurrentDay() {
     }
 }
 
-function selectDay(day) {
-    currentDate.setDate(day);
-
-    document.querySelectorAll('.weekdays div').forEach(div => {
-        div.classList.remove('active');
-    });
-
-    const selectedDayDiv = document.querySelector(`.weekdays div:nth-child(${day})`);
-    selectedDayDiv.classList.add('active');
-
-    updateTaskList(currentDate);
-}
 
 function checkTaskCompletion() {
     const taskList = document.getElementById('taskList');

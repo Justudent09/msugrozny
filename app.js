@@ -52,6 +52,7 @@ function updateWeekdays() {
         weekdaysContainer.appendChild(div);
     }
 
+    // Выделение сегодняшнего дня при первой загрузке
     selectDay(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
     scrollToCurrentDay();
 
@@ -63,24 +64,20 @@ function handleScrollForNextMonth() {
     const weekdaysContainer = document.getElementById('weekdays');
     const maxScrollLeft = weekdaysContainer.scrollWidth - weekdaysContainer.clientWidth;
     
-    // Проверяем, если скролл достиг конца контейнера
     if (weekdaysContainer.scrollLeft >= maxScrollLeft - 1) {
         addFirstDayOfNextMonth();
-        weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth); // Удаляем слушатель, чтобы не дублировать добавление
+        weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth);
     }
 }
 
 function addFirstDayOfNextMonth() {
     const weekdaysContainer = document.getElementById('weekdays');
-    
-    // Переходим к следующему месяцу
     const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
-    // Создаем блок для первого дня следующего месяца
     const div = document.createElement('div');
     div.className = 'day-block';
-    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear()); // Обработчик клика для отображения расписания
+    div.onclick = () => selectDay(1, nextMonth.getMonth(), nextMonth.getFullYear());
 
     const dayAbbreviation = document.createElement('span');
     dayAbbreviation.textContent = weekdayNames[nextMonth.getDay()];
@@ -93,18 +90,19 @@ function addFirstDayOfNextMonth() {
     weekdaysContainer.appendChild(div);
 }
 
-// Обновленная функция selectDay для обработки нового дня
 function selectDay(day, month, year) {
-    currentDate.setDate(day);
-    currentDate.setMonth(month);
-    currentDate.setFullYear(year);
+    // Обновляем текущую дату с новыми параметрами
+    currentDate = new Date(year, month, day);
 
+    // Снимаем выделение со всех дней
     document.querySelectorAll('.day-block').forEach(div => {
         div.classList.remove('active');
     });
 
+    // Ищем элемент для выбранного дня
     const selectedDayDiv = Array.from(document.querySelectorAll('.day-block')).find(div => {
-        return div.querySelector('span:last-child').textContent == day.toString();
+        const dayText = div.querySelector('span:last-child').textContent;
+        return parseInt(dayText) === day && month === currentDate.getMonth() && year === currentDate.getFullYear();
     });
 
     if (selectedDayDiv) {

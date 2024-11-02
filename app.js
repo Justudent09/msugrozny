@@ -55,8 +55,8 @@ function updateWeekdays() {
     selectDay(currentDate.getDate());
     scrollToCurrentDay();
 
-    // Добавляем слушатель события скролла
-    weekdaysContainer.addEventListener('scroll', handleScrollForNextMonth);
+    // Добавляем слушатель для обнаружения дотягивания до конца
+    weekdaysContainer.addEventListener('touchend', handleScrollForNextMonth);
 }
 
 function handleScrollForNextMonth() {
@@ -65,13 +65,7 @@ function handleScrollForNextMonth() {
     
     // Проверяем, достигнут ли конец скролла
     if (weekdaysContainer.scrollLeft >= maxScrollLeft - 10) {
-        // Добавляем слушатель для обнаружения дальнейшего скролла вправо
-        weekdaysContainer.addEventListener('wheel', detectOverscrollToNextMonth, { once: true });
-    }
-}
-
-function detectOverscrollToNextMonth(event) {
-    if (event.deltaY > 0 || event.deltaX > 0) { // Если продолжается скролл вправо
+        // Если пользователь дотягивает до конца, добавляем следующий месяц
         addFirstDayOfNextMonth();
     }
 }
@@ -98,7 +92,7 @@ function addFirstDayOfNextMonth() {
     weekdaysContainer.appendChild(div);
 
     // Снимаем слушатель, чтобы не дублировать добавление
-    weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth);
+    weekdaysContainer.removeEventListener('touchend', handleScrollForNextMonth);
 }
 
 function scrollToCurrentDay() {

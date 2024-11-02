@@ -83,14 +83,14 @@ function checkTaskCompletion() {
     const taskList = document.getElementById('taskList');
     const currentTime = new Date();
     const taskItems = taskList.querySelectorAll('li');
-    
+
     taskItems.forEach((item, index) => {
         const timeText = item.querySelector('span').textContent;
         const [startTime, endTime] = timeText.split('-').map(t => {
             const [hours, minutes] = t.split(':').map(Number);
             return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes);
         });
-        
+
         if (currentTime >= startTime && currentTime < endTime) {
             item.classList.add('active');
             const checkmark = document.createElement('span');
@@ -382,7 +382,7 @@ document.getElementById('lit').addEventListener('click', () => {
 
 document.getElementById('close-empty-pairs-modal').addEventListener('click', () => {
     emptyPairs.classList.add('modal-hide');
-    
+
     emptyPairs.addEventListener('animationend', function handleAnimationEnd() {
         emptyPairs.style.display = 'none';
         emptyPairs.classList.remove('modal-hide'); 

@@ -55,25 +55,25 @@ function updateWeekdays() {
     selectDay(currentDate.getDate());
     scrollToCurrentDay();
 
-    // Добавляем слушатель для обнаружения дотягивания до конца
-    weekdaysContainer.addEventListener('touchend', handleScrollForNextMonth);
+    // Добавляем слушатель для скролла
+    weekdaysContainer.addEventListener('scroll', handleScrollForNextMonth);
 }
 
 function handleScrollForNextMonth() {
     const weekdaysContainer = document.getElementById('weekdays');
     const maxScrollLeft = weekdaysContainer.scrollWidth - weekdaysContainer.clientWidth;
     
-    // Проверяем, достигнут ли конец скролла
-    if (weekdaysContainer.scrollLeft >= maxScrollLeft - 10) {
-        // Если пользователь дотягивает до конца, добавляем следующий месяц
+    // Проверяем, если скролл достиг конца контейнера
+    if (weekdaysContainer.scrollLeft >= maxScrollLeft - 1) {
         addFirstDayOfNextMonth();
+        weekdaysContainer.removeEventListener('scroll', handleScrollForNextMonth); // Удаляем слушатель, чтобы не дублировать добавление
     }
 }
 
 function addFirstDayOfNextMonth() {
     const weekdaysContainer = document.getElementById('weekdays');
     
-    // Увеличиваем месяц
+    // Переходим к следующему месяцу
     const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     const weekdayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
@@ -90,9 +90,6 @@ function addFirstDayOfNextMonth() {
     div.appendChild(dayAbbreviation);
     div.appendChild(dayNumber);
     weekdaysContainer.appendChild(div);
-
-    // Снимаем слушатель, чтобы не дублировать добавление
-    weekdaysContainer.removeEventListener('touchend', handleScrollForNextMonth);
 }
 
 function scrollToCurrentDay() {

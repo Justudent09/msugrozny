@@ -165,29 +165,14 @@ function updateTaskList(date) {
             const targetDateValue = jsDateToExcelDate(new Date(dateKey));
             let targetRowIndex = -1;
 
-for (let i = 0; i < jsonData.length; i++) {
-    const cellValue = jsonData[i][1];
+            for (let i = 0; i < jsonData.length; i++) {
+                const cellValue = jsonData[i][1];
 
-    // Попытка сопоставить число (excel-дата)
-    if (typeof cellValue === 'number' && cellValue === targetDateValue) {
-        targetRowIndex = i;
-        break;
-    }
-
-    // Попытка сопоставить строку формата 'ДД.ММ.ГГГГ'
-    if (typeof cellValue === 'string') {
-        const [day, month, year] = cellValue.split('.');
-        const cellDate = new Date(+year, +month - 1, +day);
-        if (
-            cellDate.getFullYear() === date.getFullYear() &&
-            cellDate.getMonth() === date.getMonth() &&
-            cellDate.getDate() === date.getDate()
-        ) {
-            targetRowIndex = i;
-            break;
-        }
-    }
-}
+                if (typeof cellValue === 'number' && cellValue === targetDateValue) {
+                    targetRowIndex = i;
+                    break;
+                }
+            }
 
             if (targetRowIndex !== -1) {
                 const timeSlots = [

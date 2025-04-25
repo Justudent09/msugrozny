@@ -175,13 +175,21 @@ function updateTaskList(date) {
             }
 
             if (targetRowIndex !== -1) {
-                const timeSlots = [
+                const isFriday = date.getDay() === 5;
+
+                const timeSlots = isFriday ? [
+                    '9:00-10:30',
+                    '10:40-12:10',
+                    '14:00-15:30',
+                    '15:40-17:10',
+                    '17:20-18:50'
+                ]:[
                     '9:00-10:30',
                     '10:40-12:10',
                     '13:20-14:50',
                     '15:00-16:30',
                     '16:40-18:10'
-                ];
+                ];  
 
                 const groupMapping = {
                     'ПМИ-2курс': [14, 15],

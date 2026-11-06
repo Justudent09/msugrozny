@@ -1,0 +1,291 @@
+/* Расписание — минималистичное приложение (light theme по умолчанию, в TG — тема клиента) */
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1b1b1f;
+  --text-2: rgba(27, 27, 31, 0.55);
+  --text-3: rgba(27, 27, 31, 0.38);
+  --accent: #007aff;
+  --accent-soft: rgba(0, 122, 255, 0.10);
+  --line: rgba(27, 27, 31, 0.08);
+  --now: #34c759;
+  --radius: 14px;
+}
+
+[data-theme="dark"] {
+  --bg: #141416;
+  --surface: #1f1f22;
+  --text: #f2f2f4;
+  --text-2: rgba(242, 242, 244, 0.55);
+  --text-3: rgba(242, 242, 244, 0.36);
+  --accent: #2f9bff;
+  --accent-soft: rgba(47, 155, 255, 0.16);
+  --line: rgba(242, 242, 244, 0.09);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px calc(16px + env(safe-area-inset-bottom));
+}
+
+/* ── header ─────────────────────────────── */
+.top__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.top__title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.top__user {
+  font-size: 14px;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.groups {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 14px 0 4px;
+  scrollbar-width: none;
+}
+.groups::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color .15s ease, background-color .15s ease, border-color .15s ease, transform .1s ease;
+  white-space: nowrap;
+}
+.chip:hover { color: var(--text); }
+.chip:active { transform: scale(.96); }
+.chip[aria-selected="true"] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+.chip:focus-visible,
+.daybar__arrow:focus-visible,
+.date-line__today:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── day bar ────────────────────────────── */
+.daybar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.daybar__tabs {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px;
+}
+
+.daytab {
+  border: 0;
+  background: transparent;
+  color: var(--text-3);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+.daytab:hover { color: var(--text-2); }
+.daytab[aria-selected="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.daytab:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.daybar__arrow {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color .15s ease, transform .1s ease;
+}
+.daybar__arrow:hover { color: var(--text); }
+.daybar__arrow:active { transform: scale(.94); }
+.daybar__arrow:disabled { opacity: .35; cursor: default; }
+
+/* ── date + lessons ─────────────────────── */
+.date-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 2px 12px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.date-line__today {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background-color .15s ease;
+}
+.date-line__today:hover { background: var(--accent-soft); }
+
+.lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lesson {
+  display: flex;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  animation: rise .18s ease both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lesson { animation: none; }
+}
+
+.lesson--now { border-color: var(--now); }
+
+.lesson__time {
+  flex: 0 0 88px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+}
+.lesson--now .lesson__time { color: var(--now); }
+
+.lesson__body { flex: 1; min-width: 0; }
+
+.lesson__name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lesson__teacher {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+
+.lesson__room {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 8px;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+
+.lesson__now-badge {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--now);
+  vertical-align: middle;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-3);
+  padding: 56px 0;
+  font-size: 15px;
+}
+.empty__sub {
+  margin-top: 6px;
+  font-size: 13px;
+}
+.empty__btn {
+  margin-top: 16px;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity .15s ease, transform .1s ease;
+}
+.empty__btn:hover { opacity: .88; }
+.empty__btn:active { transform: scale(.96); }
+
+.foot {
+  margin-top: auto;
+  padding-top: 28px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+}

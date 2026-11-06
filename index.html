@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f5">
+  <title>Расписание</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="top">
+      <div class="top__row">
+        <h1 class="top__title">Расписание</h1>
+        <span class="top__user" id="tg-user" hidden></span>
+      </div>
+      <div class="groups" id="groups" role="tablist" aria-label="Направление"></div>
+    </header>
+
+    <nav class="daybar" aria-label="День недели">
+      <button class="daybar__arrow" id="prev-day" aria-label="Предыдущий день">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="daybar__tabs" id="day-tabs"></div>
+      <button class="daybar__arrow" id="next-day" aria-label="Следующий день">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </nav>
+
+    <main>
+      <div class="date-line">
+        <span id="date-label"></span>
+        <button class="date-line__today" id="today-btn">Сегодня</button>
+      </div>
+      <div class="lessons" id="lessons" aria-live="polite"></div>
+    </main>
+
+    <footer class="foot" id="foot"></footer>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
